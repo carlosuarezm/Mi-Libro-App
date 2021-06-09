@@ -18,7 +18,7 @@ export default function App() {
         screenOptions={{
           headerShown: false
         }}
-        initialRouteName={'Camera'}
+        initialRouteName={'Login'}
       >
         {/* Tabs */}
         
