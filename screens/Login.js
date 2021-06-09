@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import firebase from '../firebase/fire.js'
 import "firebase/auth";
 import { SocialIcon } from 'react-native-elements'
 import * as Google from 'expo-google-app-auth'
+import logoApp from '../assets/logo.png'
 
 const handledGoogleSingIn = async () => {
   const config = {
@@ -29,15 +30,15 @@ const Login = (props) => {
 
   const loginGoogle = async () => {
     const res = await handledGoogleSingIn()
-    
-    if(res){
+
+    if (res) {
       setTimeout(() => {
         console.log(res.user)
         home()
       }, 300);
     }
-    
-    
+
+
   }
 
   const loginUser = async () => {
@@ -58,7 +59,7 @@ const Login = (props) => {
       setError(err.message);
     }
   }
-  const home = () =>{
+  const home = () => {
     props.navigation.navigate('Home')
   }
 
@@ -71,7 +72,17 @@ const Login = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bienvenid@s a MiLibro!</Text>
+
+      {/* <Text style={styles.title}>Bienvenid@s a MiLibro!</Text> */}
+      <Image
+        source={logoApp}
+        resizeMode='cover'
+        style={{
+          width: 300,
+          height: 150,
+          borderRadius: 20
+        }}
+      />
 
       <Text style={styles.text}>
         Email
@@ -107,11 +118,11 @@ const Login = (props) => {
 
       <View style={styles.googleContainer}>
 
-        
-        
-          <SocialIcon type="google" style={styles.googlelButton} onPress={loginGoogle}/>
-        
-        
+
+
+        <SocialIcon type="google" style={styles.googlelButton} onPress={loginGoogle} />
+
+
       </View>
 
       <View style={styles.skipContainer}>
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
   text: { fontSize: 12, marginTop: 18, fontWeight: 'bold', color: 'white', textAlign: 'left' },
   textInput: { width: '90%', marginBottom: 10, padding: 10, borderWidth: 0, backgroundColor: 'white', borderRadius: 100, },
 
-  button: { backgroundColor: '#6169E7', padding: 15, width: "48%", borderRadius: 100 },
+  button: { backgroundColor: '#0a8e96', padding: 15, width: "48%", borderRadius: 100 },
   buttonText: { fontSize: 16, color: 'white', alignSelf: 'center', fontWeight: 'bold' },
 
   btnContainer: {
@@ -145,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   googlelButton: {
-    backgroundColor: "#6169E7",
+    backgroundColor: "#0a8e96",
   },
 
   googleContainer: {
@@ -154,8 +165,8 @@ const styles = StyleSheet.create({
   skipContainer: {
     marginTop: 20
   },
-  buttonSkip:{
-    backgroundColor: '#6169E7', padding: 15, width: "75%", borderRadius: 100
+  buttonSkip: {
+    backgroundColor: '#0a8e96', padding: 15, width: "75%", borderRadius: 100
   }
 });
 
