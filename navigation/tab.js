@@ -9,6 +9,7 @@ import {Image} from 'react-native'
 import iconHome from '../assets/home.png'
 import iconFav from '../assets/fav.png'
 import iconSearch from '../assets/search.png'
+import Camera from '../screens/camera.js'
 
 
 
@@ -79,7 +80,7 @@ const Tabs = () => {
             })}
         >
             <Tab.Screen name='Home' component={Home} />
-            <Tab.Screen name='Search' component={Gallery} />
+            <Tab.Screen name='Search' component={Camera} />
             <Tab.Screen name='Favorites' component={Favorites} />
         </Tab.Navigator>
     )

@@ -9,7 +9,7 @@ const LineDivider = () => {
     return(
         <View style={{ width: 1, paddingVertical: 5 }}>
             <View style={{ flex: 1, borderLeftColor: '#64676D', borderLeftWidth: 1 }}></View>
-        </View>
+        </View> 
     )
 }
 
