@@ -1,19 +1,36 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Image } from 'react-native'
 import { View, Text, ImageBackground, TouchableOpacity, ScrollView} from 'react-native'
 import iconBack from '../assets/back.png'
 import iconMore from '../assets/more.png'
+import iconLike from '../assets/like3.png'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+
+
+const fetchFont = async () => {
+    await Font.loadAsync({
+        'Roboto-Black': require('../assets/fonts/Roboto-Black.ttf'),
+        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
+        'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf')
+    })
+}
 
 
 const LineDivider = () => {
     return(
         <View style={{ width: 1, paddingVertical: 5 }}>
-            <View style={{ flex: 1, borderLeftColor: '#64676D', borderLeftWidth: 1 }}></View>
+            <View style={{ flex: 1, borderLeftColor: '#EFEFF0', borderLeftWidth: 1 }}></View>
         </View> 
     )
 }
 
 const BookDetail = ({route, navigation}) => {
+
+    const [fontLoaded, setFontLoaded] = useState(false)
 
     const [book, setBook] = React.useState(null)
 
@@ -23,6 +40,17 @@ const BookDetail = ({route, navigation}) => {
     }, [book])
 
     function renderBookInfoSection(){
+
+        if(!fontLoaded){
+            return <AppLoading startAsync={fetchFont}
+                onError={() => console.log("ERROR")}
+                onFinish={() => {
+                    setFontLoaded(true)
+                }}
+            />
+        }
+
+
         return (
             <View style={{ flex: 1}}>
                 <ImageBackground
@@ -68,20 +96,20 @@ const BookDetail = ({route, navigation}) => {
                     </TouchableOpacity>
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: book.navTintColor }}>Book Details</Text>
+                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: book.navTintColor }}>Detalle del Libro</Text>
                     </View>
 
                     <TouchableOpacity
                         style={{ marginLeft: 8}}
-                        onPress={() => console.log('Aca va la opcion para eliminar favoritos')}
+                        onPress={() => console.log('Aca va la opcion para agregar a favoritos')}
                     >
                         <Image 
-                            source={iconMore}
+                            source={iconLike}
                             resizeMode='contain'
                             style={{
-                                width: 30,
-                                height: 30,
-                                tintColor: book.navTintColor,
+                                width: 25,
+                                height: 25,
+                                tintColor: '#E9190F',
                                 alignSelf: 'flex-end'
                             }}
                         />
@@ -105,8 +133,8 @@ const BookDetail = ({route, navigation}) => {
 
                 {/* Book Name and Author */}
                 <View style={{ flex: 1.8, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: book.navTintColor }}>{book.bookName}</Text>
-                        <Text style={{ color: book.navTintColor }}>{book.author}</Text>
+                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 22, lineHeight: 30, color: book.navTintColor }}>{book.bookName}</Text>
+                        <Text style={{ fontFamily:'Roboto-Regular', fontSize: 16, lineHeight: 22, color: book.navTintColor }}>{book.author}</Text>
                 </View>
 
                 {/* Book Info */}
@@ -121,19 +149,19 @@ const BookDetail = ({route, navigation}) => {
                 >
                     {/* Rating */}
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{color: '#FFFFFF'}}>{book.rating}
+                        <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.rating}
                         </Text>
-                        <Text style={{color: '#FFFFFF'}}>Rating
+                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Rating
                         </Text>
                     </View>
 
                     <LineDivider/>
 
                     {/* Pages */}
-                    <View style={{ flex: 1, paddingHorizontal: 12, alignItems: 'center' }}>
-                        <Text style={{color: '#FFFFFF'}}>{book.pageNo}
+                    <View style={{ flex: 1, paddingHorizontal: 1, alignItems: 'center' }}>
+                        <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.pageNo}
                         </Text>
-                        <Text style={{color: '#FFFFFF'}}>Number of Page
+                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Nro. Paginas
                         </Text>
                     </View>
                 </View>
@@ -142,14 +170,24 @@ const BookDetail = ({route, navigation}) => {
     }
 
     function renderBookDescription(){
+
+        if(!fontLoaded){
+            return <AppLoading startAsync={fetchFont}
+                onError={() => console.log("ERROR")}
+                onFinish={() => {
+                    setFontLoaded(true)
+                }}
+            />
+        }
+
         return(
-            <View style={{ flex: 1, flexDirection: 'row', padding: 24 }}>
+            <View style={{ flex: 1, flexDirection: 'row', paddingTop: 50, paddingRight: 24, paddingLeft: 24, paddingBottom: 0}}>
                 <ScrollView
-                    contentContainerStyle={{paddingLeft: 36}}
+                    contentContainerStyle={{paddingLeft: 8}}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Text style={{ color: '#FFFFFF', marginBottom: 24 }}>Description</Text>
-                    <Text style={{ color: '#64676D' }} >{book.description}</Text>
+                    <Text style={{ fontFamily:'Roboto-Bold', fontSize: 22, lineHeight: 30, color: '#FFFFFF', marginBottom: 24 }}>Descripcion</Text>
+                    <Text style={{ fontFamily:'Roboto-Regular', fontSize: 18, lineHeight: 30, color: '#64676D', textAlign: 'justify'}} >{book.description}</Text>
                 </ScrollView>
             </View>
         )
