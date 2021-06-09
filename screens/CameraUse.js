@@ -59,7 +59,7 @@ const CameraUse = () => {
     //****vamos de nuevo*********************** */
     <View style={styles.container}>
       <Camera
-        ratio={"4:3"}
+        ratio={"16:9"}
         style={{ flex: 1 }}
         type={type}
         ref={camRef}
