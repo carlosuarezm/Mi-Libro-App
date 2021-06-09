@@ -23,7 +23,6 @@ const Home = ({ navigation }) => {
                         <Text style={{ color: '#FFFFFF', fontSize: 16, lineHeight: 22}}>Hola</Text>
                         <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 30}}>{profile.name}</Text>
                     </View>
-
                 </View>
 
             </View>
