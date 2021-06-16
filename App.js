@@ -6,6 +6,8 @@ import BookDetails from './screens/BookDetails.js';
 import Login from './screens/Login'
 import Camera from "./screens/Camera.js"
 import {StatusBar} from 'expo-status-bar'
+import { DataProvider } from './context/DataContext.js';
+import BookState from './context/Book/BookState.js';
 
 
 const Stack = createStackNavigator()
@@ -13,25 +15,25 @@ const Stack = createStackNavigator()
 export default function App() {
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false
-        }}
-        initialRouteName={'Login'}
-      >
-        {/* Tabs */}
+    <BookState>
+    {/* <DataProvider> */}
+      <NavigationContainer>
         
-        <Stack.Screen name='Home' component={Tabs}/>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Login'}>
+          
+          {/* Tabs */}
+          <Stack.Screen name='Home' component={Tabs}/>
 
-        {/* Screens */}
-        <Stack.Screen name='Login' component={Login} options={{ headerShown: false }}/>
-        <Stack.Screen name='Camera' component={Camera}/>
-        <Stack.Screen name='BookDetails' component={BookDetails} options={{ headerShown: false }}/>
-      </Stack.Navigator>
+          {/* Screens */}
+          <Stack.Screen name='Login' component={Login} options={{ headerShown: false }}/>
+          <Stack.Screen name='Camera' component={Camera}/>
+          <Stack.Screen name='BookDetails' component={BookDetails} options={{ headerShown: false }}/>
+        </Stack.Navigator>
 
-      {/* <StatusBar backgroundColor='#FFFFFF'/> */}
-    </NavigationContainer> 
+        <StatusBar style='light' backgroundColor='#1E1B26'/>
+      </NavigationContainer> 
+    {/* </DataProvider> */}
+    </BookState>
   );
 }
 
