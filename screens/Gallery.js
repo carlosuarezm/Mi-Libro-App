@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { StyleSheet, Text, View, Image,TouchableOpacity  } from 'react-native';
 
+
 const Gallery = () => {
 
     const [selectedImage, setSelectedImage] = useState(null)
@@ -60,3 +61,4 @@ const styles = StyleSheet.create({
 
 
 export default Gallery
+

@@ -1,135 +1,193 @@
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Image } from 'react-native'
-import book1 from '../assets/cleancode.jpg'
-import book2 from '../assets/harry.jpg'
-import book3 from '../assets/gameofthrones.png'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Image, Dimensions } from 'react-native'
+import iconCamera from '../assets/camera.png'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+import BookContext from '../context/Book/BookContext.js'
 
+const fetchFont = async () => {
+    await Font.loadAsync({
+        'Roboto-Black': require('../assets/fonts/Roboto-Black.ttf'),
+        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
+        'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf')
+    })
+}
+
+const { width, height } = Dimensions.get('window');
+const ITEM_SIZE = width * 0.72;
+const SPACING = 10;
 
 const Home = ({ navigation }) => {
 
+    const [books, setBooks] = useState([]);
+    const [userLogged, setUserLogged] = useState(true)
+
+    const { booksHistory } = useContext(BookContext)
+
+    useEffect(() => {
+        setBooks(booksHistory)
+    }, [])
+
+    const [fontLoaded, setFontLoaded] = useState(false)
+
     const profileData = {
-        name: 'Lee Wei Chun' 
+        name: 'Lee Wei Chun'
     }
 
     const [profile, setProfile] = React.useState(profileData)
 
-    function renderHeader(profile){
+    function renderHeader(profile) {
+
+        if (!fontLoaded) {
+            return <AppLoading startAsync={fetchFont}
+                onError={() => console.log("ERROR")}
+                onFinish={() => {
+                    setFontLoaded(true)
+                }}
+            />
+        }
 
         return (
-            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center'}}>
+            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center' }}>
                 {/* Saludo */}
-                <View style={{ flex: 1 }}>
-                    <View style={{ marginRight: 24 }}>
-                        <Text style={{ color: '#FFFFFF', fontSize: 16, lineHeight: 22}}>Hola</Text>
-                        <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 30}}>{profile.name}</Text>
+
+                {userLogged
+                    ? <View style={{ flex: 1 }}>
+                        <View style={{ marginRight: 24 }}>
+                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Thin', fontSize: 16, lineHeight: 22 }}>Hola</Text>
+                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Medium', fontSize: 18, lineHeight: 30 }}>{profile.name}</Text>
+                        </View>
+                      </View>
+
+
+                    : <View style={{ flex: 1 }}>
+                        <View style={{ marginRight: 24 }}>
+                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Thin', fontSize: 16, lineHeight: 22 }}>Hola</Text>
+                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Medium', fontSize: 18, lineHeight: 30 }}>¡Que tengas un buen día!</Text>
+                        </View>
+                      </View>
+                }
+
+                {/* Camera */}
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: '#F96D41',
+                        height: 40,
+                        paddingLeft: 3,
+                        paddingRight: 12,
+                        borderRadius: 20
+                    }}
+                    onPress={() => navigation.navigate("Camera")}
+                >
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{
+                            width: 30, height: 30, alignItems: 'center', justifyContent: 'center',
+                            borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.5)'
+                        }}>
+                            <Image
+                                source={iconCamera}
+                                resizeMode='contain'
+                                style={{
+                                    width: 20,
+                                    height: 20
+                                }}
+                            />
+                        </View>
+
+                        <Text style={{ marginLeft: 8, color: '#FFFFFF', fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22 }}>Buscar</Text>
                     </View>
-
-                </View>
-
+                </TouchableOpacity>
             </View>
         )
     }
 
-    const bookCleanCode = {
-        id:1,
-        bookName: 'Clean Code',
-        bookCover: book1,
-        rating: 4.5,
-        pageNo: 341,
-        author: 'Robert C.Martin',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(240, 240, 232, 0.9)',
-        navTintColor: '#000'
-    }
+    function renderMyBookSection() {
 
-    const bookHarry = {
-        id:2,
-        bookName: 'Harry Potter',
-        bookCover: book2,
-        rating: 4.7,
-        pageNo: 200,
-        author: 'J.K. Rowling',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(247, 239, 219, 0.9)',
-        navTintColor: '#000'
-    }
-    
-    const bookGameOfThrones = {
-        id:3,
-        bookName: 'Game of Thrones',
-        bookCover: book3,
-        rating: 4.9,
-        pageNo: 412,
-        author: 'George R.R. Martin',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(247, 239, 219, 0.9)',
-        navTintColor: '#000'
-    }
+        if (!fontLoaded) {
+            return <AppLoading startAsync={fetchFont}
+                onError={() => console.log("ERROR")}
+                onFinish={() => {
+                    setFontLoaded(true)
+                }}
+            />
+        }
 
-    const myBooksData = [bookCleanCode, bookHarry, bookGameOfThrones]
-
-    const [myBooks, setMyBooks] = React.useState(myBooksData)
-
-
-    function renderMyBookSection(myBooks){
-
-        const renderItem = ({item, index}) => {
+        const renderItem = ({ item, index }) => {
 
             return (
                 <TouchableOpacity
-                style={{
-                    flex:1,
-                    marginLeft: index == 0 ? 24 : 0,
-                    marginRight: 12,
-                }}
-                onPress={() => navigation.navigate("BookDetails", {
-                    book: item
-                })}
-                > 
-
-                {/* Book Cover */}
-                <Image
-                    source={item.bookCover}
-                    resizeMode='cover'
                     style={{
-                        width: 180,
-                        height:250,
-                        borderRadius: 20
+                        flex: 1,
+                        marginLeft: index == 0 ? 24 : 0,
+                        marginRight: 12,
                     }}
-                />
+                    onPress={() => navigation.navigate("BookDetails", {
+                        book: item
+                    })}
+                >
 
-                {/* Book Info */}
-                <View style={{ marginTop: 12, flexDirection: 'row', width: 180, height: 200, justifyContent: 'center'}}>
-                    <Text style={{marginLeft: 5, textAlign: 'left', width: 180, height: 200, color: '#FFFFFF'}}>{item.author}</Text>
-                </View>
-            </TouchableOpacity>
+                    {/* Book Cover */}
+                    <Image
+                        source={item.bookCover}
+                        resizeMode='cover'
+                        style={{
+                            width: 180,
+                            height: 250,
+                            borderRadius: 20
+                        }}
+                    />
+
+                    {/* Book Info */}
+                    <View style={{ marginTop: 12, flexDirection: 'row', width: 180, height: 200, justifyContent: 'center' }}>
+                        <Text style={{ fontFamily: 'Roboto-Regular', marginLeft: 5, textAlign: 'center', width: 180, height: 200, color: '#FFFFFF' }}>{item.author}</Text>
+                    </View>
+                </TouchableOpacity>
             )
-        } 
+        }
 
-        return(
+        return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
                 <View style={{ paddingHorizontal: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 16, lineHeight: 22, color: '#FFFFFF' }}>Mis Busquedas Recientes</Text>
+                    <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF' }}>Mis Busquedas Recientes</Text>
                 </View>
 
                 {/* Books */}
-                <View style={{ flex:1, marginTop: 24 }}>
-                    <FlatList
-                        data={myBooks}
-                        renderItem={renderItem}
-                        keyExtractor={item => `${item.id}`}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
+
+                {books.length === 0 || books === undefined
+
+                    ? <View style={{ paddingHorizontal: 24, marginTop: 50, flexDirection: 'column', justifyContent: 'center' }}>
+                        <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22, color: '#64676D', textAlign: 'center' }}>
+                            No tiene búsquedas recientes.
+                        </Text>
+                        <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22, color: '#64676D', textAlign: 'center' }}>
+                            ¡Realice una búsqueda!
+                        </Text>
+                    </View>
+
+                    : <View style={{ flex: 1, marginTop: 24 }}>
+                        <FlatList
+                            data={books}
+                            renderItem={renderItem}
+                            keyExtractor={item => `${item.id}`}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            snapToInterval={ITEM_SIZE}
+                            decelerationRate={0}
+                            bounces={false}
+                        />
+                    </View>
+                }
             </View>
         )
     }
 
 
     return (
-       <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1B26'}}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1B26' }}>
             {/* Header Section */}
             <View style={{ height: 200 }}>
                 {renderHeader(profile)}
@@ -139,13 +197,13 @@ const Home = ({ navigation }) => {
             <ScrollView style={{ marginTop: 12 }}>
                 {/* Books Section */}
                 <View>
-                    {renderMyBookSection(myBooks)}
+                    {renderMyBookSection()}
                 </View>
 
                 {/* Categories Section */}
 
             </ScrollView>
-       </SafeAreaView>
+        </SafeAreaView>
 
     )
 }
