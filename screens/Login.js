@@ -126,8 +126,8 @@ const Login = (props) => {
       </View>
 
       <View style={styles.skipContainer}>
-        <TouchableOpacity onPress={home} style={styles.buttonSkip}>
-          <Text style={styles.buttonText}>Continuar sin loguearse</Text>
+        <TouchableOpacity onPress={home}>
+          <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>Continuar sin loguearse</Text>
         </TouchableOpacity>
       </View>
 
