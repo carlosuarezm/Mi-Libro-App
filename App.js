@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState,useEffect } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> 132b09d53d736d281d30822347f33d8456a3e439
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/tab.js'
