@@ -15,6 +15,9 @@ import AppLoading from 'expo-app-loading'
 import BookContext from '../context/Book/BookContext.js'
 import { addToFavorite, getFavorites, getIsFavorite, removeAFavorite } from '../prueba/db'
 
+import UserContext from '../context/User/UserContext.js';
+
+
 
 const fetchFont = async () => {
     await Font.loadAsync({
@@ -47,44 +50,52 @@ const BookDetail = ({route, navigation}) => {
     const [isFavorite, setIsFavorite] = React.useState(false)
     const [book, setBook] = React.useState(null)
 
-    const { fillFavBooks, deleteFavBook } = useContext(BookContext)
+    const { favBooks, fillFavBooks, deleteFavBook } = useContext(BookContext)
+    const { state } = useContext(UserContext)
 
     React.useEffect(() => {
         let {book} = route.params
         setBook(book)
-    }, [book])
+    }, [])
+
+    // console.log(state)
+    // console.log('Los favoritos: ')
+    // console.log(favBooks)
+
 
     React.useEffect(() => {
         (() => {
-            if(userLogged && book){
+            if(state && book){
+                //favBooks es undefined
+                console.log(book)
                 const response = getIsFavorite(book.id)
                 response ? setIsFavorite(true) : console.log('no era favorito')
             }else{
                 console.log('Effect. No se pudo analizar si era o no favorito')
             }
         })()
-    }, [userLogged, book])
+    }, [state, book])
 
 
 
     function addFavorite(){
-        if(!userLogged){
+        if(!state){
             console.log('no estas registrado')
         }else{
-            addToFavorite(book.id)
+            addToFavorite(book)
             setIsFavorite(true)
-            fillFavBooks(book)
+            // fillFavBooks(book)
             console.log('El libro ha sido añadido a Favoritos')
         }
     }
 
     function removeFavorite(){
-        if(!userLogged){
+        if(!state){
             console.log('no estas registrado')
         }else{
             removeAFavorite(book.id)
             setIsFavorite(false)
-            deleteFavBook(book)
+            // deleteFavBook(book)
             console.log('El libro ha sido eliminado de Favoritos')
         }
     }
@@ -151,6 +162,9 @@ const BookDetail = ({route, navigation}) => {
                         <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: book.navTintColor }}>Detalle del Libro</Text>
                     </View>
 
+                    {state 
+                    
+                    ?
                     <TouchableOpacity
                         style={{ marginLeft: 8}}
                         onPress = {isFavorite ? removeFavorite : addFavorite}
@@ -165,6 +179,10 @@ const BookDetail = ({route, navigation}) => {
                             }}
                         />
                     </TouchableOpacity>
+                    
+                    : <></>
+                    }
+                    
 
                 </View>
 
@@ -184,9 +202,9 @@ const BookDetail = ({route, navigation}) => {
 
                 {/* Book Name and Author */}
                 <View style={{ flex: 1.8, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 30, color: book.navTintColor }}>{book.bookName}
+                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 30, color: book.navTintColor, textAlign:'center' }}>{book.bookName}
                         </Text>
-                        <Text style={{ fontFamily:'Roboto-Regular', fontSize: 16, lineHeight: 22, color: book.navTintColor }}>{book.author}</Text>
+                        <Text style={{ fontFamily:'Roboto-Regular', fontSize: 16, lineHeight: 22, color: book.navTintColor, textAlign:'center' }}>{book.author}</Text>
                 </View>
 
                 {/* Book Info */}
@@ -223,7 +241,7 @@ const BookDetail = ({route, navigation}) => {
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.publishedDate}
                         </Text>
-                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Año
+                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Publicacion
                         </Text>
                     </View>
                 </View>
@@ -280,7 +298,13 @@ const BookDetail = ({route, navigation}) => {
     
         )
     }else{
-        return (<></>)
+        return (
+        <>
+            <View>
+                <Text>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Text>
+            </View>
+        
+        </>)
     }
 
 }

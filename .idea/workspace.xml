@@ -5,14 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b07a6f66-4924-4242-a6d0-98206e01bb8c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apis/Books.js" beforeDir="false" afterPath="$PROJECT_DIR$/apis/Books.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/Book/BookReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/Book/BookReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/Book/BookState.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/Book/BookState.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/DataContext.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/types.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/funciones/ApiLibro.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/funciones/ApiTextoReqs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/funciones/storage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigation/tab.js" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/tab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prueba/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prueba/db.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/BookDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/BookDetails.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/Favorites.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Favorites.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Gallery.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Gallery.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Home.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/camera.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,11 +52,11 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="244" y="118" width="1200" height="800" key="AVDManager" timestamp="1623795118764">
+    <state x="244" y="118" width="1200" height="800" key="AVDManager" timestamp="1624169378571">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="222" y="105" width="900" height="662" key="AVDManager/0.0.1440.860@0.0.1440.860" timestamp="1623650829357" />
-    <state x="244" y="118" width="1200" height="800" key="AVDManager/0.0.1920.1040@0.0.1920.1040" timestamp="1623795118764" />
+    <state x="244" y="118" width="1200" height="800" key="AVDManager/0.0.1920.1040@0.0.1920.1040" timestamp="1624169378571" />
     <state x="515" y="185" key="FileChooserDialogImpl" timestamp="1623465694210">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

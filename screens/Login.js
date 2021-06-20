@@ -1,33 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import firebase from '../firebase/fire.js'
 import "firebase/auth";
 import { SocialIcon } from 'react-native-elements'
 import * as Google from 'expo-google-app-auth'
 import logoApp from '../assets/logo.png'
-
-const handledGoogleSingIn = async () => {
-  const config = {
-    androidClientId: "628836821863-5jhatmlvu7hm5s6073dd9pl2vtpvciv5.apps.googleusercontent.com",
-    scopes: ['profile', 'email']
-  }
-
-  const { type, accessToken, user } = await Google.logInAsync(config);
-  const res = { accessToken, user }
-  if (type === 'success') {
-    // console.log(user)
-    // console.log('token', accessToken)
-    return res
-  }
-}
+import UserContext from '../context/User/UserContext.js';
+import AsyncStorage from '../utils/storage.js';
 
 
 const Login = (props) => {
-
+  
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [error, setError] = useState('');
+  
+  const { setUserAuthenticated } = useContext(UserContext)
 
+  const handledGoogleSingIn = async () => {
+    const config = {
+      androidClientId: "628836821863-5jhatmlvu7hm5s6073dd9pl2vtpvciv5.apps.googleusercontent.com",
+      scopes: ['profile', 'email']
+    }
+    
+    const { type, accessToken, user } = await Google.logInAsync(config);
+    const res = { accessToken, user }
+    if (type === 'success') {
+      // console.log(user)
+      // console.log('token', accessToken)
+      await AsyncStorage.storeData('@userData', user)
+      setUserAuthenticated(user)
+      return res
+    }
+  }
+  
   const loginGoogle = async () => {
     const res = await handledGoogleSingIn()
 
@@ -43,7 +49,6 @@ const Login = (props) => {
 
   const loginUser = async () => {
     try {
-
       let aut = await firebase.auth().signInWithEmailAndPassword(email, password);
       home()
 

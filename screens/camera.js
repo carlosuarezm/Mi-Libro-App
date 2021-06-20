@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Feather as Icon } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
-import { reconocerPorTexto } from "../funciones/ApiTextoReqs.js";
-import { buscador } from "../funciones/ApiLibro.js";
+import { reconocerPorTexto } from "../utils/ApiTextoReqs.js";
+import { buscador } from "../utils/ApiLibro.js";
+
+
+import book1 from '../assets/cleancode.jpg'
+
+import AsyncStorage from "../utils/storage.js";
+import BookContext from '../context/Book/BookContext.js'
 
 
 export default function CameraTest({ navigation }) {
@@ -13,6 +19,8 @@ export default function CameraTest({ navigation }) {
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [miCamera, setMiCamera] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
+
+    const { booksHistory, setBooksHistory } = useContext(BookContext)
 
     useEffect(() => {
         (async () => {
@@ -100,6 +108,7 @@ export default function CameraTest({ navigation }) {
         //console.log(libro)
         const book = {
             id: libro.id,
+            publishedDate: libro.publishedDate,
             bookName: libro.title,
             bookCover: { uri: libro.imageLinks.thumbnail },
             rating: libro.averageRating != null ? libro.averageRating : 'N/A',
@@ -109,10 +118,24 @@ export default function CameraTest({ navigation }) {
             backgroundColor: 'rgba(240, 240, 232, 0.9)',
             navTintColor: '#000'
         }
-        //console.log(book)
+
+        //Recordar agregar la lógica que si el libro que se buscó ya está guardado, que no se guarde
+        // fillBooksHistory(book)
+        // await AsyncStorage.storeData('@booksHistory', book)
+
+        if(booksHistory){
+            const existeElLibro = booksHistory.id === book.id ? true : false
+
+            if(!existeElLibro){
+                setBooksHistory(book)
+                await AsyncStorage.storeData(`@booksHistory`, book)
+            }
+        }
+
+
+            
         setIsLoading(false)
         navigation.navigate('BookDetails', { book })
-
     }
 
 
@@ -121,50 +144,50 @@ export default function CameraTest({ navigation }) {
 
     return (
         !isLoading ?
-        (<View style={styles.container}>
-            <Camera style={styles.camera} type={type} ratio={'16:9'}
-                ref={ref => {
-                    setMiCamera(ref);
-                }}>
-                <View style={{ flex: 1, flexDireccion: "row", backgroundColor: "transparent", }}>
+            (<View style={styles.container}>
+                <Camera style={styles.camera} type={type} ratio={'16:9'}
+                    ref={ref => {
+                        setMiCamera(ref);
+                    }}>
+                    <View style={{ flex: 1, flexDireccion: "row", backgroundColor: "transparent", }}>
 
-                    <TouchableOpacity
-                        style={{ position: 'absolute', bottom: 20, left: 20 }}
-                        // style={{position: 'absolute', bottom:20 , left:20}}
-                        onPress={() => {
-                            setType(
-                                type === Camera.Constants.Type.back
-                                    ? Camera.Constants.Type.front
-                                    : Camera.Constants.Type.back
-                            );
-                        }}>
-                        <Icon name="refresh-ccw" size={50} color="white" />
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ position: 'absolute', bottom: 20, left: 20 }}
+                            // style={{position: 'absolute', bottom:20 , left:20}}
+                            onPress={() => {
+                                setType(
+                                    type === Camera.Constants.Type.back
+                                        ? Camera.Constants.Type.front
+                                        : Camera.Constants.Type.back
+                                );
+                            }}>
+                            <Icon name="refresh-ccw" size={50} color="white" />
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}
-                        onPress={takePhoto}>
-                        <Icon name="aperture" size={50} color="white" />
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}
+                            onPress={takePhoto}>
+                            <Icon name="aperture" size={50} color="white" />
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ position: 'absolute', bottom: 20, right: 20 }}
-                        onPress={openImagePickerAsync}>
-                        <Icon name="upload" size={50} color="white" />
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ position: 'absolute', bottom: 20, right: 20 }}
+                            onPress={openImagePickerAsync}>
+                            <Icon name="upload" size={50} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                </Camera>
+
+            </View>)
+            :
+            <Modal onRequestClose={() => null} visible={true}>
+                <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center', opacity: 0.1 }}>
+                    <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
+                        <Text style={{ fontSize: 20, fontWeight: '200' }}>Loading</Text>
+                        <ActivityIndicator size="large" />
+                    </View>
                 </View>
-            </Camera>
-            
-        </View>)
-        :
-        <Modal onRequestClose={() => null} visible={true}>
-            <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center',opacity: 0.1 }}>
-                <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
-                    <Text style={{ fontSize: 20, fontWeight: '200' }}>Loading</Text>
-                    <ActivityIndicator size="large" />
-                </View>
-            </View>
-        </Modal>
+            </Modal>
     );
 }
 

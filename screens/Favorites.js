@@ -1,7 +1,6 @@
-import { getFavorites } from '../prueba/db'
+import { getFavorites, addToFavorite, addFavorites } from '../prueba/db'
 import getBooks from '../apis/Books'
 import { useFocusEffect } from '@react-navigation/native';
-import { DataContext } from '../context/DataContext'
 
 import React, { useState, useContext, useRef, useEffect } from 'react'
 import {
@@ -12,13 +11,16 @@ import {
     FlatList,
     Image,
     Dimensions,
-    Animated
+    Animated,
+    StatusBar
 } from 'react-native'
 
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 
 import BookContext from '../context/Book/BookContext'
+
+import UserContext from '../context/User/UserContext.js';
 
 
 const fetchFont = async () => {
@@ -47,22 +49,45 @@ const UserNotLoggedIn = () => (
 
 
 const Favorites = ({ navigation }) => {
-    const [userLogged, setUserLogged] = useState(true)
-    // const [books, setBooks] = React.useState([])
+    // const [userLogged, setUserLogged] = useState(true)
     // const [loading, setLoading] = React.useState(false)
     // const [reloadData, setReloadData] = React.useState(false)
-
+    // const favorites = getFavorites()
+    
+    const [books, setBooks] = React.useState(null)
+    const [favorites, setFavorites] = useState([]);
     const [fontLoaded, setFontLoaded] = useState(false)
     const scrollX = React.useRef(new Animated.Value(0)).current;
+    
+    const { favBooks, fillFavBooks, setFavBooks } = useContext(BookContext)
+    const { state } = useContext(UserContext)
+    
+    // console.log('--------ESTOY EN FAVORITOS 1 ---------')
+    // console.log(favBooks)
+    // console.log(fillFavBooks)
+    // console.log(state)
+    // console.log('--------ESTOY EN FAVORITOS 2 ---------')
+    console.log('--------ESTOY EN FAVORITOS 0 ---------')
+    // console.log(favorites)
 
-    const { favBooks, fillFavBooks } = useContext(BookContext)
 
+    // useEffect(() => {
+    //     const favorites = getFavorites()
+    //     console.log(favorites)
+    //     setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
+    // }, [favorites])
     useEffect(() => {
-        fillFavBooks({ id: -1 }, ...favBooks, { id: -2 })
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            const favorites = getFavorites()
+            console.log(favorites)
+            setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
+        });
+          
+        return unsubscribe;
+    }, [navigation]);
 
 
-    if (!userLogged) {
+    if (!state) {
         return <UserNotLoggedIn />;
     }
 
@@ -127,14 +152,14 @@ const Favorites = ({ navigation }) => {
                             justifyContent: 'flex-start'
                         }}>
                             <Text style={{
-                                fontFamily: 'Roboto-Bold',
+                                fontFamily: 'Roboto-Medium',
                                 marginLeft: 5,
                                 textAlign: 'center',
                                 width: 180,
                                 color: '#000000'
                             }}>{item.bookName}</Text>
                             <Text style={{
-                                fontFamily: 'Roboto-Bold',
+                                fontFamily: 'Roboto-Light',
                                 marginLeft: 5,
                                 marginTop: 10,
                                 textAlign: 'center',
@@ -149,14 +174,16 @@ const Favorites = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#1E1B26' }}>
+        <View style={{ flex: 1, backgroundColor: '#1E1B26', marginTop: StatusBar.currentHeight }}>
             {/* <Backdrop books={books} scrollX={scrollX} /> */}
             {/* Header */}
             <View style={{
+                flex: 0.5,
                 paddingHorizontal: 24,
-                marginTop: 60,
+                marginTop: 50,
                 flexDirection: 'row',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                alignItems:'center',
             }}>
                 <Text style={{
                     fontFamily: 'Roboto-Regular',
@@ -166,13 +193,14 @@ const Favorites = ({ navigation }) => {
                 }}>Mis Favoritos</Text >
             </View>
 
-            {favBooks.length === 1 || favBooks === undefined
+            {  favorites.length === 2
 
                 ? <View style={{
+                    flex:3,
                     paddingHorizontal: 24,
-                    marginTop: 270,
                     flexDirection: 'row',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    alignItems: 'center'
                     }}>
                         <Text style={{
                             fontFamily: 'Roboto-Bold',
@@ -185,7 +213,7 @@ const Favorites = ({ navigation }) => {
 
                 : <Animated.FlatList
                     showsHorizontalScrollIndicator={false}
-                    data={favBooks}
+                    data={favorites}
                     keyExtractor={item => `${item.id}`}
                     horizontal
                     contentContainerStyle={{ alignItems: 'center' }}

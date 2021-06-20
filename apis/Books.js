@@ -56,7 +56,7 @@ const bookSherlock = {
 }
 
 export default function getBooks(){
-    return[bookCleanCode, bookHarry, bookGameOfThrones, bookSherlock]
+    return bookCleanCode
 }
 
 // export default function getBooks(...books){

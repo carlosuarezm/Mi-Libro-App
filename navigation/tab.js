@@ -9,21 +9,18 @@ import {Image} from 'react-native'
 import iconHome from '../assets/home.png'
 import iconFav from '../assets/fav.png'
 import iconSearch from '../assets/search.png'
-
+// import { enableScreens } from 'react-native-screens';
 
 
 const Tab = createBottomTabNavigator();
 
+// enableScreens(false);
+
 const tabOptions = {
     showLabel: false,
     style: {
-        position: 'absolute',
-        bottom: 25,
-        left: 20,
-        right: 20,
-        elevation: 0,
-        backgroundColor: '#FFFFFF',
-        borderRadius: 12,
+        backgroundColor: '#F6F3FF',
+        borderRadius:0,
         height: 90
     }
 }
