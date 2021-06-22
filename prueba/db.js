@@ -1,7 +1,10 @@
 import getBooks from "../apis/Books";
+import firebase from '../firebase/fire.js'
+import React, { useEffect } from 'react'
 
 const favorites = [];
 const books = getBooks();
+const db = firebase.firestore();
 
 // function addToFavorite(idBook){
 //     const result = books.find( book => book.id === idBook);
@@ -30,7 +33,28 @@ function addToFavorite(book){
     }else{
         favorites.push(book)
     }
+    //****Prueba Persistencia de datos con Async y Await*/
+    //**Usar Async y await */
+    //**ALTA */
+    db.collection('favoritos').add({
+        idUsuario: 'id2',
+        nombre: 'Carlitos',
+        favoritos: ["TengoCalle4","TengoCalle5","TengoCalle6"]
+    })
 
+    //*Devuelte los docs uno por uno********* */
+    db.collection('favoritos').onSnapshot(querySnapshot =>{
+        querySnapshot.docs.forEach(doc => {
+            console.log("SNAP:",doc.data())
+            console.log("SNAP-id:",doc.id)
+        })
+    })
+
+    //***DELETE x ID del documento usar Alert */
+    // const favoritoAborrar = db.collection('favoritos').doc('nzrKJTLffQI7cTuLcIoC')
+    // favoritoAborrar.delete()
+   
+   
     // if(result){
     //     favorites.push(result)
     // }

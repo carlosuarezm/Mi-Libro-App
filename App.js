@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useReducer } from 'react';
+
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/tab.js'
@@ -20,10 +21,12 @@ import Home from './screens/Home.js';
 
 const Stack = createStackNavigator()
 
+
 const App = () => {
   const { state, setUserAuthenticated } = useContext(UserContext)
 
   const { fillBooksHistory, setBooksHistory } = useContext(BookContext)
+
 
   const checkUser = async () => {
     const user = await AsyncStorage.getData('@userData')
