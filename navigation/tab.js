@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 const tabOptions = {
     showLabel: false,
     style: {
-        backgroundColor: '#F6F3FF',
+        backgroundColor: '#FFFFFF',
         borderRadius:0,
         height: 90
     }

@@ -180,16 +180,13 @@ export default function CameraTest({ navigation }) {
 
             </View>)
             :
-            <Modal onRequestClose={() => null} visible={true}>
-                <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center', opacity: 0.1 }}>
-                    <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
-                        <Text style={{ fontSize: 20, fontWeight: '200' }}>Loading</Text>
-                        <ActivityIndicator size="large" />
-                    </View>
-                </View>
-            </Modal>
+
+            <View style={{flex: 1, justifyContent: "center", flexDirection: "row", padding: 10, backgroundColor: '#1E1B26'}}>
+                <ActivityIndicator size="large" color="#FFFFFF" ></ActivityIndicator>
+            </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

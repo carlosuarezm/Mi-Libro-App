@@ -25,6 +25,7 @@ const Login = (props) => {
     
     const { type, accessToken, user } = await Google.logInAsync(config);
     const res = { accessToken, user }
+    
     if (type === 'success') {
       // console.log(user)
       // console.log('token', accessToken)
@@ -38,7 +39,7 @@ const Login = (props) => {
     const res = await handledGoogleSingIn()
 
     if (res) {
-      setTimeout(() => {
+      setTimeout(async () => {
         console.log(res.user)
         home()
       }, 300);
@@ -64,7 +65,7 @@ const Login = (props) => {
       setError(err.message);
     }
   }
-  const home = () => {
+  const home = async () => {
     props.navigation.navigate('Home')
   }
 

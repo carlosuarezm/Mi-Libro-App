@@ -33,10 +33,10 @@ const Home = ({ navigation }) => {
     const { state, setUserAuthenticated } = useContext(UserContext)
 
     //Boton LOGOUT
-    function logOut() {
-        AsyncStorage.clearData();
-        setUserAuthenticated(null)
-        navigation.goBack()
+    async function logOut() {
+        // setUserAuthenticated(null)
+        await AsyncStorage.clearData();
+        navigation.navigate('Login')    
     }
 
     //Fuentes

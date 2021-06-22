@@ -49,6 +49,7 @@ const App = () => {
 
 
   return (
+    //Hay que ordenar esto para que se pueda hacer un LogOut correcto
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} /*initialRouteName={'Login'}*/>
         {!state ?
