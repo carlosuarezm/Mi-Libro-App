@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ActivityIndicator, Image, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Feather as Icon } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import { reconocerPorTexto } from "../utils/ApiTextoReqs.js";
 import { buscador } from "../utils/ApiLibro.js";
-
+import iconUpload from '../assets/upload2.png'
+import iconSwitchCamera from '../assets/switchcamera2.png'
+import iconTakeAPicture from '../assets/takeapicture.png'
 
 import book1 from '../assets/cleancode.jpg'
 
@@ -123,17 +125,17 @@ export default function CameraTest({ navigation }) {
         // fillBooksHistory(book)
         // await AsyncStorage.storeData('@booksHistory', book)
 
-        if(booksHistory){
+        if (booksHistory) {
             const existeElLibro = booksHistory.id === book.id ? true : false
 
-            if(!existeElLibro){
+            if (!existeElLibro) {
                 setBooksHistory(book)
                 await AsyncStorage.storeData(`@booksHistory`, book)
             }
         }
 
 
-            
+
         setIsLoading(false)
         navigation.navigate('BookDetails', { book })
     }
@@ -149,39 +151,63 @@ export default function CameraTest({ navigation }) {
                     ref={ref => {
                         setMiCamera(ref);
                     }}>
-                    <View style={{ flex: 1, flexDireccion: "row", backgroundColor: "transparent", }}>
-
-                        <TouchableOpacity
-                            style={{ position: 'absolute', bottom: 20, left: 20 }}
-                            // style={{position: 'absolute', bottom:20 , left:20}}
-                            onPress={() => {
-                                setType(
-                                    type === Camera.Constants.Type.back
-                                        ? Camera.Constants.Type.front
-                                        : Camera.Constants.Type.back
-                                );
-                            }}>
-                            <Icon name="refresh-ccw" size={50} color="white" />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}
-                            onPress={takePhoto}>
-                            <Icon name="aperture" size={50} color="white" />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={{ position: 'absolute', bottom: 20, right: 20 }}
-                            onPress={openImagePickerAsync}>
-                            <Icon name="upload" size={50} color="white" />
-                        </TouchableOpacity>
-                    </View>
                 </Camera>
+                <View style={{ flex: 0.2, flexDirection: 'row', backgroundColor: "#1E1B26", justifyContent:'space-between', alignItems:'center'}}>
+                    <TouchableOpacity
+                        // style={{ position: 'absolute', bottom: 20, left: 20 }}
+                        style={{left:20}}
+                        onPress={() => {
+                            setType(
+                                type === Camera.Constants.Type.back
+                                    ? Camera.Constants.Type.front
+                                    : Camera.Constants.Type.back
+                            );
+                        }}>
+                        <Image
+                            source={iconSwitchCamera}
+                            resizeMode='contain'
+                            style={{
+                                width: 55,
+                                height: 55
+                            }}
+                        />
+                        {/* <Icon name="refresh-ccw" size={50} color="white" /> */}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        // style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}
+                        onPress={takePhoto}>
+                        <Image
+                            source={iconTakeAPicture}
+                            resizeMode='contain'
+                            style={{
+                                width: 55,
+                                height: 55
+                            }}
+                        />
+                        {/* <Icon name="aperture" size={50} color="white" /> */}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{right:20}}
+                        // style={{ position: 'absolute', bottom: 20, right: 20 }}
+                        onPress={openImagePickerAsync}>
+                        <Image
+                            source={iconUpload}
+                            resizeMode='contain'
+                            style={{
+                                width: 55,
+                                height: 55
+                            }}
+                        />
+                        {/* <Icon name="upload" size={50} color="white" /> */}
+                    </TouchableOpacity>
+                </View>
 
             </View>)
             :
 
-            <View style={{flex: 1, justifyContent: "center", flexDirection: "row", padding: 10, backgroundColor: '#1E1B26'}}>
+            <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", padding: 10, backgroundColor: '#1E1B26' }}>
                 <ActivityIndicator size="large" color="#FFFFFF" ></ActivityIndicator>
             </View>
     );
@@ -190,10 +216,11 @@ export default function CameraTest({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, 
+        marginTop: StatusBar.currentHeight 
     },
     camera: {
-        flex: 1,
+        flex: 0.8,
     },
     buttonContainer: {
         flex: 1,

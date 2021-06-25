@@ -1,23 +1,13 @@
-// import iconMore from '../assets/more.png'
-// import getBooks from '../apis/Books.js'
-// import { useFocusEffect } from '@react-navigation/native';
-// import Favorites from './Favorites'
-//Saque el useContext importado por separado.
-import React, {useState, useContext} from 'react'
-import { View, Text, ImageBackground, TouchableOpacity, ScrollView, Icon} from 'react-native'
-
-import { Image } from 'react-native'
+import React, { useState, useContext } from 'react'
+import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, StyleSheet, StatusBar } from 'react-native'
 import iconBack from '../assets/back.png'
 import iconLike from '../assets/like3.png'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 
 import BookContext from '../context/Book/BookContext.js'
-import { addToFavorite, getFavorites, getIsFavorite, removeAFavorite } from '../prueba/db'
-
 import UserContext from '../context/User/UserContext.js';
-
-
+import { addToFavorite, getFavorites, getIsFavorite, removeAFavorite } from '../pruebaFavoritos/db'
 
 const fetchFont = async () => {
     await Font.loadAsync({
@@ -30,23 +20,17 @@ const fetchFont = async () => {
     })
 }
 
-
 const LineDivider = () => {
-    return(
+    return (
         <View style={{ width: 1, paddingVertical: 5 }}>
             <View style={{ flex: 1, borderLeftColor: '#EFEFF0', borderLeftWidth: 1 }}></View>
-        </View> 
+        </View>
     )
 }
 
-const BookDetail = ({route, navigation}) => {
 
-    // const [booksFavorites, setBooksFavorites] = React.useState([])
-    // const [loading, setLoading] = React.useState(false)
-    // const [reloadData, setReloadData] = React.useState(false)
-    
+const BookDetail = ({ route, navigation }) => {
     const [fontLoaded, setFontLoaded] = useState(false)
-    const [userLogged, setUserLogged] = useState(true)
     const [isFavorite, setIsFavorite] = React.useState(false)
     const [book, setBook] = React.useState(null)
 
@@ -54,34 +38,26 @@ const BookDetail = ({route, navigation}) => {
     const { state } = useContext(UserContext)
 
     React.useEffect(() => {
-        let {book} = route.params
+        let { book } = route.params
         setBook(book)
     }, [])
 
-    // console.log(state)
-    // console.log('Los favoritos: ')
-    // console.log(favBooks)
-
-
     React.useEffect(() => {
         (() => {
-            if(state && book){
-                //favBooks es undefined
-                console.log(book)
+            if (state && book) {
                 const response = getIsFavorite(book.id)
                 response ? setIsFavorite(true) : console.log('no era favorito')
-            }else{
+            } else {
                 console.log('Effect. No se pudo analizar si era o no favorito')
             }
         })()
     }, [state, book])
 
 
-
-    function addFavorite(){
-        if(!state){
+    function addFavorite() {
+        if (!state) {
             console.log('no estas registrado')
-        }else{
+        } else {
             addToFavorite(book)
             setIsFavorite(true)
             // fillFavBooks(book)
@@ -89,10 +65,10 @@ const BookDetail = ({route, navigation}) => {
         }
     }
 
-    function removeFavorite(){
-        if(!state){
+    function removeFavorite() {
+        if (!state) {
             console.log('no estas registrado')
-        }else{
+        } else {
             removeAFavorite(book.id)
             setIsFavorite(false)
             // deleteFavBook(book)
@@ -101,10 +77,9 @@ const BookDetail = ({route, navigation}) => {
     }
 
 
-    function renderBookInfoSection(){
-
+    function renderBookInfoSection() {
         //Para el manejo de Fuentes
-        if(!fontLoaded){
+        if (!fontLoaded) {
             return <AppLoading startAsync={fetchFont}
                 onError={() => console.log("ERROR")}
                 onFinish={() => {
@@ -113,145 +88,100 @@ const BookDetail = ({route, navigation}) => {
             />
         }
 
-
         return (
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
                 <ImageBackground
                     source={book.bookCover}
                     resizeMode='cover'
-                    style={{
-                        position:'absolute',
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0
-                    }}
+                    style={styles.imageBackground}
                 />
 
                 {/* Color Overlay */}
                 <View
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0,
-                        backgroundColor: book.backgroundColor
-                    }}
+                    style={styles.colorOverlay}
                 >
                 </View>
 
                 {/* Navigation Header */}
-                <View style={{ flexDirection: 'row', paddingHorizontal: 12, height: 80, alignItems: 'flex-end' }}>
+                <View style={styles.containerHeader}>
                     <TouchableOpacity
-                        style={{ marginLeft: 8}}
+                        style={{ marginLeft: 8 }}
                         onPress={() => navigation.goBack()}
                     >
-                        <Image 
+                        <Image
                             source={iconBack}
                             resizeMode='contain'
-                            style={{
-                                width: 25,
-                                height: 25,
-                                tintColor: book.navTintColor
-                            }}
+                            style={styles.imageIconBack}
                         />
                     </TouchableOpacity>
 
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: book.navTintColor }}>Detalle del Libro</Text>
+                    <View style={styles.containerDetailTitle}>
+                        <Text style={state ? styles.textDetailTitle : styles.textDetailTitleNotLoggedIn}>Detalle del Libro</Text>
                     </View>
 
-                    {state 
-                    
-                    ?
-                    <TouchableOpacity
-                        style={{ marginLeft: 8}}
-                        onPress = {isFavorite ? removeFavorite : addFavorite}
-                    >
-                        <Image 
-                            source={iconLike}
-                            resizeMode='contain'
-                            style={{
-                                width: 25,
-                                height: 25,
-                                tintColor: isFavorite ? 'red' : 'grey' 
-                            }}
-                        />
-                    </TouchableOpacity>
-                    
-                    : <></>
-                    }
-                    
+                    {state
+                        ?
+                        <TouchableOpacity
+                            style={{ marginLeft: 8 }}
+                            onPress={isFavorite ? removeFavorite : addFavorite}
+                        >
+                            <Image
+                                source={iconLike}
+                                resizeMode='contain'
+                                style={{ width: 25, height: 25, tintColor: isFavorite ? 'red' : 'grey' }}
+                            />
+                        </TouchableOpacity>
 
+                        : <></>
+                    }
                 </View>
 
-
                 {/* Book Cover */}
-                <View style={{ flex: 5, paddingTop: 36, alignItems: 'center' }}>
+                <View style={styles.containerBookCover}>
                     <Image
                         source={book.bookCover}
                         resizeMode='contain'
-                        style={{
-                            flex: 1,
-                            width: 150,
-                            height: 'auto'
-                        }}
+                        style={styles.bookCoverImage}
                     />
                 </View>
 
                 {/* Book Name and Author */}
-                <View style={{ flex: 1.8, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 30, color: book.navTintColor, textAlign:'center' }}>{book.bookName}
-                        </Text>
-                        <Text style={{ fontFamily:'Roboto-Regular', fontSize: 16, lineHeight: 22, color: book.navTintColor, textAlign:'center' }}>{book.author}</Text>
+                <View style={styles.containerBookNameAuthor}>
+                    <Text style={styles.bookName}>{book.bookName}</Text>
+                    <Text style={styles.bookAuthor}>{book.author}</Text>
                 </View>
 
                 {/* Book Info */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        paddingVertical: 20,
-                        margin: 24,
-                        borderRadius: 12,
-                        backgroundColor: 'rgba(0,0,0,0.3)'
-                    }}
-                >
+                <View style={styles.containerBookInfo}>
                     {/* Rating */}
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.rating}
-                        </Text>
-                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Rating
-                        </Text>
+                    <View style={styles.itemsBookInfo}>
+                        <Text style={styles.textDescriptionItems}>{book.rating}</Text>
+                        <Text style={styles.textTitleItems}>Rating</Text>
                     </View>
 
-                    <LineDivider/>
+                    <LineDivider />
 
                     {/* Pages */}
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.pageNo}
-                        </Text>
-                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Nro. Paginas
-                        </Text>
+                    <View style={styles.itemsBookInfo}>
+                        <Text style={styles.textDescriptionItems}>{book.pageNo}</Text>
+                        <Text style={styles.textTitleItems}>Nro. Paginas</Text>
                     </View>
 
-                    <LineDivider/>
+                    <LineDivider />
 
                     {/* Published Date */}
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{fontFamily:'Roboto-Bold', fontSize: 16, lineHeight: 22, color: '#FFFFFF'}}>{book.publishedDate}
-                        </Text>
-                        <Text style={{fontFamily:'Roboto-Regular', fontSize: 14, lineHeight: 22, color: '#FFFFFF'}}>Publicacion
-                        </Text>
+                    <View style={styles.itemsBookInfo}>
+                        <Text style={styles.textDescriptionItems}>{book.publishedDate}</Text>
+                        <Text style={styles.textTitleItems}>Publicacion</Text>
                     </View>
                 </View>
             </View>
         )
     }
 
-    function renderBookDescription(){
-
-        if(!fontLoaded){
+    function renderBookDescription() {
+        //Para las Fuentes
+        if (!fontLoaded) {
             return <AppLoading startAsync={fetchFont}
                 onError={() => console.log("ERROR")}
                 onFinish={() => {
@@ -260,53 +190,155 @@ const BookDetail = ({route, navigation}) => {
             />
         }
 
-        return(
-            <View style={{ flex: 1, flexDirection: 'column', paddingTop: 50, paddingRight: 24, paddingLeft: 24, paddingBottom: 0}}>
-                <Text style={{ fontFamily:'Roboto-Bold', fontSize: 22, lineHeight: 30, color: '#FFFFFF', marginBottom: 24 }}>Descripcion
-                </Text>
+        return (
+            <View style={styles.containerDescription}>
+                <Text style={styles.textTitleDescription}>Descripcion</Text>
                 <ScrollView
-                    contentContainerStyle={{paddingLeft: 8}}
+                    contentContainerStyle={{ paddingLeft: 8 }}
                     showsVerticalScrollIndicator={false}
-                    style={{paddingBottom:180}}
+                    style={{ paddingBottom: 180 }}
                 >
-                    <Text style={{ fontFamily:'Roboto-Regular', fontSize: 18, lineHeight: 30, color: '#64676D', textAlign: 'justify'}} >{book.description}</Text>
+                    <Text style={styles.textBookDescription} >{book.description}</Text>
                 </ScrollView>
             </View>
         )
     }
 
-
-
-
-    if(book){
-        return(
-            <View style={{ flex: 1, backgroundColor: '#1E1B26'}}>
-                {/* Book Cover Section */}
-                <View style={{ flex: 4 }}>
-                    {renderBookInfoSection()}
-                </View>
-
-                {/* Description */}
-                <View style={{ flex: 2 }}>
-                    {renderBookDescription()}
-                </View>
-
-                {/* Buttons */}
-                <View style={{ height: 70 }}></View>
-
+    return (
+        <View style={{ flex: 1, backgroundColor: '#1E1B26', marginTop: StatusBar.currentHeight  }}>
+            {/* Book Cover Section */}
+            <View style={{ flex: 4 }}>
+                {renderBookInfoSection()}
             </View>
-    
-        )
-    }else{
-        return (
-        <>
-            <View>
-                <Text>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Text>
-            </View>
-        
-        </>)
-    }
 
+            {/* Description */}
+            <View style={{ flex: 3 }}>
+                {renderBookDescription()}
+            </View>
+        </View>
+    )
 }
 
 export default BookDetail
+
+
+const styles = StyleSheet.create({
+    containerDescription: {
+        flex: 1,
+        flexDirection: 'column',
+        paddingTop: 30,
+        paddingRight: 24,
+        paddingLeft: 24,
+        paddingBottom: 0
+    },
+    textTitleDescription: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 22,
+        lineHeight: 30,
+        color: '#FFFFFF',
+        marginBottom: 24
+    },
+    textBookDescription: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 18,
+        lineHeight: 30,
+        color: '#64676D',
+        textAlign: 'justify'
+    },
+    containerBookInfo: {
+        flexDirection: 'row',
+        paddingVertical: 20,
+        margin: 24,
+        borderRadius: 12,
+        backgroundColor: 'rgba(0,0,0,0.3)'
+    },
+    itemsBookInfo: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    textTitleItems: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 14,
+        lineHeight: 22,
+        color: '#FFFFFF'
+    },
+    textDescriptionItems: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#FFFFFF'
+    },
+    containerBookNameAuthor: {
+        flex: 1.8,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    bookName: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 16,
+        lineHeight: 30,
+        color: '#000000',
+        textAlign: 'center'
+    },
+    bookAuthor: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#000000',
+        textAlign: 'center'
+    },
+    containerBookCover: {
+        flex: 5,
+        paddingTop: 36,
+        alignItems: 'center'
+    },
+    bookCoverImage: {
+        flex: 1,
+        width: 150,
+        height: 'auto'
+    },
+    textDetailTitle: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#000000'
+    },
+    textDetailTitleNotLoggedIn: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#000000',
+        paddingRight: 25
+    },
+    containerDetailTitle: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    containerHeader: {
+        flexDirection: 'row',
+        paddingHorizontal: 12,
+        height: 80,
+        alignItems: 'flex-end'
+    },
+    imageIconBack: {
+        width: 25,
+        height: 25,
+        tintColor: '#000000'
+    },
+    colorOverlay: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: 'rgba(240, 240, 232, 0.9)'
+    },
+    imageBackground: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+    }
+});

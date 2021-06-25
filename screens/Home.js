@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Image, Dimensions, StatusBar } from 'react-native'
 import iconCamera from '../assets/camera.png'
 import iconLogOut from '../assets/logout.png'
+import iconLogIn from '../assets/login2.png'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import BookContext from '../context/Book/BookContext.js'
@@ -34,16 +35,14 @@ const Home = ({ navigation }) => {
 
     //Boton LOGOUT
     async function logOut() {
-        // setUserAuthenticated(null)
         await AsyncStorage.clearData();
-        navigation.navigate('Login')    
+        setUserAuthenticated(null)
+        navigation.navigate('Login')
     }
 
     //Fuentes
     const [fontLoaded, setFontLoaded] = useState(false)
 
-
-    //Función que Renderiza el Header
     function renderHeader() {
         if (!fontLoaded) {
             return <AppLoading startAsync={fetchFont}
@@ -57,53 +56,33 @@ const Home = ({ navigation }) => {
         return (
             <>
                 {/* Saludo */}
-
-                {state
-                    ? <>
-                        <View style={{ flex: 1, marginTop:50 }}>
-                            <View style={{ marginRight: 24 }}>
-                                <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Thin', fontSize: 16, lineHeight: 22 }}>Hola</Text>
-                                <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Medium', fontSize: 18, lineHeight: 30 }}>{state.payload.name}</Text>
-                            </View>
+                {state && state.payload
+                    ?
+                    <>
+                        <View style={styles.headerLoggedIn}>
+                            <Text style={styles.headerGreeting}>Hola</Text>
+                            <Text style={styles.headerText}>{state.payload.name}</Text>
                         </View>
 
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: '#364156',
-                                height: 40,
-                                paddingLeft: 12,
-                                paddingRight: 12,
-                                borderRadius: 20,
-                                marginTop:50
-                            }}
-                            onPress={logOut}
-                        >
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{
-                                    width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                                    borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.5)'
-                                }}>
-                                    <Image
-                                        source={iconLogOut}
-                                        resizeMode='contain'
-                                        style={{
-                                            width: 20,
-                                            height: 20
-                                        }}
-                                    />
-                                </View>
+                        <TouchableOpacity style={styles.touchButtonHeader} onPress={logOut}>
+                            <View style={styles.touchImageButtonHeader}>
+                                <Image source={iconLogOut} resizeMode='contain' style={{ width: 20, height: 20 }} />
                             </View>
-
                         </TouchableOpacity>
                     </>
-
-
-                    : <View style={{ flex: 1, marginTop:50 }}>
-                        <View style={{ marginRight: 24 }}>
-                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Thin', fontSize: 16, lineHeight: 22 }}>Hola</Text>
-                            <Text style={{ color: '#FFFFFF', fontFamily: 'Roboto-Medium', fontSize: 18, lineHeight: 30 }}>¡Que tengas un buen día!</Text>
+                    :
+                    <>
+                        <View style={styles.headerLoggedIn}>
+                            <Text style={styles.headerGreeting}>Hola</Text>
+                            <Text style={styles.headerText}>¡Que tengas un buen día!</Text>
                         </View>
-                    </View>
+
+                        <TouchableOpacity style={styles.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
+                            <View style={styles.touchImageButtonHeader}>
+                                <Image source={iconLogIn} resizeMode='contain' style={{ width: 28, height: 28 }} />
+                            </View>
+                        </TouchableOpacity>
+                    </>
                 }
             </>
         )
@@ -120,61 +99,42 @@ const Home = ({ navigation }) => {
             />
         }
 
-        const renderItem = () => {
-
-            return (
-                <TouchableOpacity
-                    style={{
-                        margin:0,
-                        alignItems:'center',
-                        justifyContent:'center'
-                    }}
-                    onPress={ () => navigation.navigate("BookDetails", {
-                        book: booksHistory
-                    })}
-                >
-
-                    {/* Book Cover */}
-                    <Image
-                        source={booksHistory.bookCover}
-                        resizeMode='contain'
-                        style={{
-                            width: 180,
-                            height: 230,
-                            borderRadius: 3
-                        }}
-                    />
-
-                    {/* Book Info */}
-                    <View style={{ marginTop: 12, flexDirection: 'row', width: 180, height: 25, justifyContent: 'center' }}>
-                        <Text style={{ fontFamily: 'Roboto-Regular', textAlign: 'center', width: 180, height: 200, color: '#FFFFFF' }}>{booksHistory.author}</Text>
-                    </View>
-                </TouchableOpacity>
-            )
-        }
-
         return (
             <>
                 {/* Header */}
-                <View style={{ flex: 1, paddingHorizontal: 24, marginTop: 10, flexDirection: 'row', justifyContent: 'center', alignItems:'center' }}>
-                    <Text style={{ fontFamily: 'Roboto-Light', fontSize: 18, lineHeight: 21, color: '#FFFFFF', textAlign:'center' }}>Mi última busqueda</Text>
+                <View style={styles.headerBookSection}>
+                    <Text style={styles.textHeaderBookSection}>Mi última busqueda</Text>
                 </View>
 
                 {/* Books */}
-
                 {booksHistory === null || booksHistory.id === undefined
 
-                    ? <View style={{ flex: 1, flexDirection: 'column', alignItems:'center' }}>
-                        <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22, color: '#64676D', textAlign: 'center' }}>
+                    ?
+                    <View style={styles.booksContainer}>
+                        <Text style={styles.textBooks}>
                             No tiene búsquedas recientes.
                         </Text>
-                        <Text style={{ fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22, color: '#64676D', textAlign: 'center' }}>
+                        <Text style={styles.textBooks}>
                             ¡Realice una búsqueda!
                         </Text>
                     </View>
 
-                    : <View style={{ flex: 4, alignItems:'center', justifyContent:'center' }}>
-                        {renderItem()}
+                    :
+                    <View style={styles.bookContainer}>
+                        <TouchableOpacity
+                            style={styles.touchBook}
+                            onPress={() => navigation.navigate("BookDetails", {
+                                book: booksHistory
+                            })}
+                        >
+                            {/* Book Cover */}
+                            <Image source={booksHistory.bookCover} resizeMode='contain' style={styles.imageBook} />
+
+                            {/* Book Info */}
+                            <View style={styles.bookInfoContainer}>
+                                <Text style={styles.textBookInfo}>{booksHistory.author}</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 }
             </>
@@ -194,36 +154,15 @@ const Home = ({ navigation }) => {
         return (
             <>
                 {/* Camera */}
-                <View style={{ width: 150 }}>
-                    <TouchableOpacity
-                        style={{
-                            backgroundColor: '#F96D41',
-                            height: 50,
-                            paddingLeft: 3,
-                            paddingRight: 12,
-                            borderRadius: 20
-                        }}
-                        onPress={() => navigation.navigate("Camera")}
-                    >
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <View style={{
-                                width: 30, height: 30, alignItems: 'center', justifyContent: 'center',
-                                borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.5)'
-                            }}>
-                                <Image
-                                    source={iconCamera}
-                                    resizeMode='contain'
-                                    style={{
-                                        width: 20,
-                                        height: 20
-                                    }}
-                                />
-                            </View>
-
-                            <Text style={{ marginLeft: 8, color: '#FFFFFF', fontFamily: 'Roboto-Regular', fontSize: 16, lineHeight: 22 }}>Buscar</Text>
+                <TouchableOpacity style={styles.touchCamera} onPress={() => navigation.navigate("Camera")}>
+                    <View style={styles.cameraContainer}>
+                        <View style={styles.imageCameraContainer}>
+                            <Image source={iconCamera} resizeMode='contain' style={styles.imageCamera} />
                         </View>
-                    </TouchableOpacity>
-                </View>
+
+                        <Text style={styles.textCamera}>Buscar</Text>
+                    </View>
+                </TouchableOpacity>
             </>
         )
     }
@@ -231,24 +170,146 @@ const Home = ({ navigation }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1B26', marginTop: StatusBar.currentHeight }}>
-            {/* Body Section */}
-            {/* <ScrollView style={{ flex: 2, backgroundColor: 'red' }}> */}
-                {/* Header Section */}
-                <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center' }}>
-                    {renderHeader()}
-                </View>
-                {/* Books Section */}
-                <View style={{ flex: 3 }}>
-                    {renderMyBookSection()}
-                </View>
-                <View style={{ flex: 1, justifyContent:'center', alignItems: 'center' }}>
-                    {renderCameraSection()}
-                </View>
-            {/* </ScrollView> */}
+            {/* Header Section */}
+            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center' }}>
+                {renderHeader()}
+            </View>
+            {/* Books Section */}
+            <View style={{ flex: 3 }}>
+                {renderMyBookSection()}
+            </View>
+            {/* Camera Section */}
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {renderCameraSection()}
+            </View>
         </SafeAreaView>
-
     )
 }
 
-
 export default Home
+
+const styles = StyleSheet.create({
+    touchCamera: {
+        backgroundColor: '#F96D41',
+        height: 50,
+        paddingLeft: 3,
+        paddingRight: 12,
+        borderRadius: 20,
+        width: 150
+    },
+    cameraContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imageCameraContainer: {
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25,
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    textCamera: {
+        marginLeft: 8,
+        color: '#FFFFFF',
+        fontFamily: 'Roboto-Regular',
+        fontSize: 16,
+        lineHeight: 22
+    },
+    headerBookSection: {
+        flex: 1,
+        paddingHorizontal: 24,
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textHeaderBookSection: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 18,
+        lineHeight: 21,
+        color: '#FFFFFF',
+        textAlign: 'center'
+    },
+    booksContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    textBooks: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#64676D',
+        textAlign: 'center'
+    },
+    bookContainer: {
+        flex: 4,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    touchBook: {
+        margin: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imageBook: {
+        width: 180,
+        height: 230,
+        borderRadius: 3
+    },
+    bookInfoContainer: {
+        marginTop: 12,
+        flexDirection: 'row',
+        width: 180,
+        height: 25,
+        justifyContent: 'center'
+    },
+    textBookInfo: {
+        fontFamily: 'Roboto-Regular',
+        textAlign: 'center',
+        width: 180,
+        height: 200,
+        color: '#FFFFFF'
+    },
+    headerGreeting: {
+        color: '#FFFFFF',
+        fontFamily: 'Roboto-Thin',
+        fontSize: 16,
+        lineHeight: 22
+    },
+    headerText: {
+        color: '#FFFFFF',
+        fontFamily: 'Roboto-Medium',
+        fontSize: 18,
+        lineHeight: 30
+    },
+    headerLoggedIn: {
+        flex: 1,
+        marginTop: 50
+    },
+    touchButtonHeader: {
+        backgroundColor: '#364156',
+        height: 40,
+        paddingLeft: 12,
+        paddingRight: 12,
+        borderRadius: 20,
+        marginTop: 50
+    },
+    touchImageButtonHeader: {
+        flex: 1,
+        flexDirection: 'row',
+        width: 32,
+        height: 32,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25,
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    imageCamera: {
+        width: 20,
+        height: 20
+    }
+})

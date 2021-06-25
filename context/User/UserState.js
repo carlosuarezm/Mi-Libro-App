@@ -16,6 +16,8 @@ const UserState = (props) => {
             type: 'SET_USER_AUTHENTICATED',
             payload: user
         })
+        console.log('Estoy en SETUSER')
+        console.log(user)
     }
 
     const deleteUserAuthenticated = (user) => {

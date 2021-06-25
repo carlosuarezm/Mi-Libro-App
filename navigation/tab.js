@@ -21,7 +21,7 @@ const tabOptions = {
     style: {
         backgroundColor: '#FFFFFF',
         borderRadius:0,
-        height: 90
+        height: 60
     }
 }
 

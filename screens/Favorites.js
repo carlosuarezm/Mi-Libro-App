@@ -1,14 +1,12 @@
-import { getFavorites, addToFavorite, addFavorites } from '../prueba/db'
+import { getFavorites, addToFavorite, addFavorites } from '../pruebaFavoritos/db'
 import getBooks from '../apis/Books'
-import { useFocusEffect } from '@react-navigation/native';
 
-import React, { useState, useContext, useRef, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
-    FlatList,
     Image,
     Dimensions,
     Animated,
@@ -35,11 +33,9 @@ const fetchFont = async () => {
 }
 
 const { height, width } = Dimensions.get('window');
-const MEDIUM_HEIGHT = height / 2;
 const ITEM_SIZE = width * 0.74;
 const SPACING = 10;
 const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2;
-const BACKDROP_HEIGHT = height * 0.65;
 
 const UserNotLoggedIn = () => (
     <View style={styles.loadingContainer}>
@@ -49,27 +45,12 @@ const UserNotLoggedIn = () => (
 
 
 const Favorites = ({ navigation }) => {
-    // const [userLogged, setUserLogged] = useState(true)
-    // const [loading, setLoading] = React.useState(false)
-    // const [reloadData, setReloadData] = React.useState(false)
-    // const favorites = getFavorites()
-    
-    const [books, setBooks] = React.useState(null)
     const [favorites, setFavorites] = useState([]);
     const [fontLoaded, setFontLoaded] = useState(false)
     const scrollX = React.useRef(new Animated.Value(0)).current;
-    
+
     const { favBooks, fillFavBooks, setFavBooks } = useContext(BookContext)
     const { state } = useContext(UserContext)
-    
-    // console.log('--------ESTOY EN FAVORITOS 1 ---------')
-    // console.log(favBooks)
-    // console.log(fillFavBooks)
-    // console.log(state)
-    // console.log('--------ESTOY EN FAVORITOS 2 ---------')
-    console.log('--------ESTOY EN FAVORITOS 0 ---------')
-    // console.log(favorites)
-
 
     // useEffect(() => {
     //     const favorites = getFavorites()
@@ -82,7 +63,7 @@ const Favorites = ({ navigation }) => {
             console.log(favorites)
             setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
         });
-          
+
         return unsubscribe;
     }, [navigation]);
 
@@ -124,48 +105,17 @@ const Favorites = ({ navigation }) => {
                     padding: SPACING * 2,
                     alignItems: 'center',
                     transform: [{ translateY }],
-                    backgroundColor: 'white',
+                    backgroundColor: '#FFFFFF',
                     borderRadius: 34,
                 }}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("BookDetails", {
-                            book: item
-                        })}
-                    >
+                    <TouchableOpacity onPress={() => navigation.navigate("BookDetails", { book: item })}>
                         {/* Book Cover */}
-                        <Image
-                            source={item.bookCover}
-                            resizeMode='cover'
-                            style={{
-                                width: 180,
-                                height: 250,
-                                borderRadius: 20
-                            }}
-                        />
+                        <Image source={item.bookCover} resizeMode='cover' style={styles.imageBookCover}/>
 
                         {/* Book Info */}
-                        <View style={{
-                            marginTop: 12,
-                            flexDirection: 'column',
-                            width: 180,
-                            height: 100,
-                            justifyContent: 'flex-start'
-                        }}>
-                            <Text style={{
-                                fontFamily: 'Roboto-Medium',
-                                marginLeft: 5,
-                                textAlign: 'center',
-                                width: 180,
-                                color: '#000000'
-                            }}>{item.bookName}</Text>
-                            <Text style={{
-                                fontFamily: 'Roboto-Light',
-                                marginLeft: 5,
-                                marginTop: 10,
-                                textAlign: 'center',
-                                width: 180,
-                                color: '#000000'
-                            }}>{item.author}</Text>
+                        <View style={styles.bookInfoContainer}>
+                            <Text style={styles.bookName}>{item.bookName}</Text>
+                            <Text style={styles.authorName}>{item.author}</Text>
                         </View>
                     </TouchableOpacity>
                 </Animated.View>
@@ -174,44 +124,21 @@ const Favorites = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#1E1B26', marginTop: StatusBar.currentHeight }}>
-            {/* <Backdrop books={books} scrollX={scrollX} /> */}
+        <View style={styles.favoritesContainer}>
             {/* Header */}
-            <View style={{
-                flex: 0.5,
-                paddingHorizontal: 24,
-                marginTop: 50,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems:'center',
-            }}>
-                <Text style={{
-                    fontFamily: 'Roboto-Regular',
-                    fontSize: 22,
-                    lineHeight: 22,
-                    color: '#FFFFFF'
-                }}>Mis Favoritos</Text >
+            <View style={styles.favoritesHeaderContainer}>
+                <Text style={styles.favoritesTextHeader}>Mis Favoritos</Text >
             </View>
 
-            {  favorites.length === 2
+            {favorites.length === 2
 
-                ? <View style={{
-                    flex:3,
-                    paddingHorizontal: 24,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                    }}>
-                        <Text style={{
-                            fontFamily: 'Roboto-Bold',
-                            fontSize: 18,
-                            lineHeight: 22,
-                            color: '#64676D',
-                            textAlign: 'center'
-                        }}>¡Su lista de Favoritos está vacía!</Text >
-                    </View>
+                ?
+                <View style={styles.emptyFavoritesContainer}>
+                    <Text style={styles.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
+                </View>
 
-                : <Animated.FlatList
+                : 
+                <Animated.FlatList
                     showsHorizontalScrollIndicator={false}
                     data={favorites}
                     keyExtractor={item => `${item.id}`}
@@ -226,7 +153,7 @@ const Favorites = ({ navigation }) => {
                     )}
                     scrollEventThrottle={16}
                     renderItem={renderItem}
-                    />
+                />
             }
         </View>
 
@@ -262,4 +189,64 @@ const styles = StyleSheet.create({
         margin: 0,
         marginBottom: 10,
     },
+    favoritesContainer: {
+        flex: 1,
+        backgroundColor: '#1E1B26',
+        marginTop: StatusBar.currentHeight
+    },
+    favoritesHeaderContainer: {
+        flex: 0.5,
+        paddingHorizontal: 24,
+        marginTop: 50,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    favoritesTextHeader: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 22,
+        lineHeight: 22,
+        color: '#FFFFFF'
+    },
+    emptyFavoritesContainer: {
+        flex: 3,
+        paddingHorizontal: 24,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textEmptyFavorites: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 18,
+        lineHeight: 22,
+        color: '#64676D',
+        textAlign: 'center'
+    },
+    imageBookCover: {
+        width: 180,
+        height: 250,
+        borderRadius: 20
+    },
+    bookInfoContainer: {
+        marginTop: 12,
+        flexDirection: 'column',
+        width: 180,
+        height: 100,
+        justifyContent: 'flex-start'
+    },
+    bookName: {
+        fontFamily: 'Roboto-Medium',
+        marginLeft: 5,
+        textAlign: 'center',
+        width: 180,
+        color: '#000000'
+    },
+    authorName: {
+        fontFamily: 'Roboto-Light',
+        marginLeft: 5,
+        marginTop: 10,
+        textAlign: 'center',
+        width: 180,
+        color: '#000000'
+    }
 });
