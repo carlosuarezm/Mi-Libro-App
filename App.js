@@ -15,9 +15,11 @@ import UserContext from './context/User/UserContext.js';
 
 const Stack = createStackNavigator()
 
+
 const App = () => {
   const { state, setUserAuthenticated } = useContext(UserContext)
   const { setBooksHistory } = useContext(BookContext)
+
 
   const checkUser = async () => {
     const user = await AsyncStorage.getData('@userData')
