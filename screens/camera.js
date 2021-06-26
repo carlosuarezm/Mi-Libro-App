@@ -92,31 +92,37 @@ export default function CameraTest({ navigation }) {
         data.append("cloud_name", "carlosuarezm")
 
         const res = await axios.post('https://api.cloudinary.com/v1_1/carlosuarezm/image/upload', data)
+        let libro;
 
-        if (!res.data.url) {
-            return alert('Error en la carga de imagen')
+        try {
+            if (!res.data.url) {
+               throw new Error('Error en la carga de imagen')
+            }
+    
+            const text = await reconocerPorTexto(res.data.url)
+            if (!text) {
+                throw new Error('Error inesperado intente de nuevo')
+            }
+    
+            libro = await buscador.libroPorReconocimiento(text)
+            if (!libro) {
+                throw new Error('Libro no encontrado')
+            }    
+        } catch (error) {
+            alert(error.message)
+            setIsLoading(false)
+            return navigation.navigate('Home')
         }
-        //console.log('Imagen en cloudnary')
-        const text = await reconocerPorTexto(res.data.url)
-        if (!text) {
-            return alert('Error inesperado intente de nuevo')
-        }
-        //console.log('Texto reconocido', text)
-        const libro = await buscador.libroPorReconocimiento(text)
-        if (!libro) {
-            return alert('Libro no encontrado')
-        }
-        //console.log('Libro encontrado')
-        //console.log(libro)
+
         const book = {
             id: libro.id,
-            publishedDate: libro.publishedDate,
+            publishedDate: libro.publishedDate ? libro.publishedDate : 'N/A',
             bookName: libro.title,
             bookCover: { uri: libro.imageLinks.thumbnail },
             rating: libro.averageRating != null ? libro.averageRating : 'N/A',
-            pageNo: libro.pageCount,
+            pageNo: libro.pageCount ? libros.pageCount : 'N/A',
             author: libro.authors[0],
-            description: libro.description,
+            description: libro.description ? libro.description : 'No se ha encontrado descripción del libro solicitado.',
             backgroundColor: 'rgba(240, 240, 232, 0.9)',
             navTintColor: '#000'
         }
@@ -134,9 +140,6 @@ export default function CameraTest({ navigation }) {
             }
         }
 
-
-
-        setIsLoading(false)
         navigation.navigate('BookDetails', { book })
     }
 

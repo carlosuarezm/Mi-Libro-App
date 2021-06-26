@@ -11,12 +11,6 @@ const urlAPI = "https://www.googleapis.com/books/v1/volumes"
             const {data: libro} = await axios.get(urlAPI + `?q=${query}&maxResults=1&key=${API_VISION_KEY}`)
             
             return formatear(libro)
-            /* new Promise((resolve, reject) =>{
-                fetch(urlAPI + `?q=${query}`)
-                .then(librosAPI => librosAPI.json())
-                .then(librosAPI => resolve(formatear(librosAPI)))
-                .catch(error => reject(error))
-            }) */
         },
 
         libroPorAutor :  async (autor) => {
@@ -40,18 +34,24 @@ const urlAPI = "https://www.googleapis.com/books/v1/volumes"
     }
 
 
-function formatear (librosAPI){
-    //console.log(librosAPI)
-    if(!librosAPI.items[0].volumeInfo){
-        throw new Error('No se encontraron resultados, intente nuevamente')
+    function formatear(librosAPI) {
+        if(!librosAPI || librosAPI.hasOwnProperty('error') || librosAPI.totalItems === 0){
+            throw new Error('Libro no reconocido. Intente nuevamente')
+        }
+    
+        let book
+        if (librosAPI.hasOwnProperty('items')) {
+            book = librosAPI.items[0].volumeInfo
+            book.id = librosAPI.items[0].id
+        } else {
+            book = librosAPI.volumeInfo
+            book.id = librosAPI.id
+        }
+    
+        const bookFormateado = formatoBook(book)
+        return bookFormateado
+    
     }
-    const libro = librosAPI.items[0].volumeInfo
-    libro.id = librosAPI.items[0].id
-
-    //const book = librosAPI.items[0].volumeInfo  
-    const bookFormateado = formatoBook(libro)    
-    return bookFormateado
-}
 
 function formatoBook (book){
     console.log(book)
@@ -70,21 +70,25 @@ function formatoBook (book){
     return losAtributosDelBook
 }
 
-function formatearLista (librosAPI){
+function formatearLista(librosAPI) {
+
     const maxBooks = 10
     let i = 0
     const lista = []
 
-    while (i<maxBooks) {
+    while (i < maxBooks) {   // falta validacion de que haya libro
 
         const book = librosAPI.items[i].volumeInfo
+        book.id = librosAPI.items[i].id
         const bookFormateado = formatoBook(book)
         lista.push(bookFormateado)
-        
+
         i++
     }
 
     return lista
+
 }
+
 
 export { buscador }

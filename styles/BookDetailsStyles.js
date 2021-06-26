@@ -125,7 +125,7 @@ const stylesBookDetails = StyleSheet.create({
         marginTop: StatusBar.currentHeight
     },
     containerDescriptionSection: {
-        flex: 3
+        flex: 2.5
     }
 });
 

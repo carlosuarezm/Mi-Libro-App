@@ -17,8 +17,8 @@ const Home = ({ navigation }) => {
 
     //Boton LOGOUT
     async function logOut() {
-        await AsyncStorage.clearData('@userData', '@booksHistory');
-        // setBooksHistory(null)
+        await AsyncStorage.clearData();
+        setBooksHistory({})
         setUserAuthenticated(null)
         navigation.navigate('Login')
     }
@@ -40,12 +40,12 @@ const Home = ({ navigation }) => {
         return (
             <>
                 {/* Saludo */}
-                {state && state.payload
+                {state
                     ?
                     <>
                         <View style={stylesHome.headerLoggedIn}>
                             <Text style={stylesHome.headerGreeting}>Hola</Text>
-                            <Text style={stylesHome.headerText}>{state.payload.name}</Text>
+                            <Text style={stylesHome.headerText}>{state.name}</Text>
                         </View>
 
                         <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={logOut}>

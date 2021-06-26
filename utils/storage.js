@@ -23,8 +23,7 @@ AsyncStorage.getData = async (key) => {
     }
 }
 
-AsyncStorage.clearData = async (userKey, bookKey) => {
-    const keys = [userKey, bookKey]
+AsyncStorage.clearData = async () => {
     try {
       await Storage.clear()
     } catch (error) {

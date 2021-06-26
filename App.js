@@ -25,6 +25,8 @@ const App = () => {
       console.log('APP - Vamos a setear al Contexto el Usuario')
       console.log(user)
       setUserAuthenticated(user)
+      console.log('Despues del SET')
+      console.log(state)
     }
     return user
   }
@@ -34,6 +36,8 @@ const App = () => {
     if (book) {
       setBooksHistory(book)
     }
+    console.log('Despues del checkUser')
+    console.log(state)
   }
 
   useEffect(() => {
@@ -43,24 +47,30 @@ const App = () => {
 
   console.log('APP - El Estado del Usuario es: ')
   console.log(state)
+
+  useEffect(() => {
+    console.log('Effect del State')
+    console.log(state)
+  }, [state]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} /*initialRouteName={'Login'}*/>
-        {!state
-          ?
+        {!state ?
           <>
-            <Stack.Screen name='Login' component={Login}/>
-            <Stack.Screen name='Home' component={Tabs}/>
+            <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+            {/* <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} /> */}
           </>
           :
-          <>
-            <Stack.Screen name='Home' component={Tabs}/>
-            <Stack.Screen name='Login' component={Login}/>
-          </>
+          null
         }
-        
-        <Stack.Screen name='Camera' component={Camera}/>
-        <Stack.Screen name='BookDetails' component={BookDetails}/>
+
+
+        {/* Tabs */}
+        <Stack.Screen name='Home' component={Tabs} />
+
+        <Stack.Screen name='Camera' component={Camera} />
+        <Stack.Screen name='BookDetails' component={BookDetails} />
       </Stack.Navigator>
 
       <StatusBar style='light' backgroundColor='#1E1B26' />

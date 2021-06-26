@@ -5,7 +5,7 @@ export default (state, action) => {
 
     switch (type) {
         case SET_USER_AUTHENTICATED:
-            return { payload }
+            return payload 
 
         case DELETE_USER_AUTHENTICATED:
             return { payload }

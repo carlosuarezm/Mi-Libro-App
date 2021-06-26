@@ -16,8 +16,9 @@ const UserState = (props) => {
             type: 'SET_USER_AUTHENTICATED',
             payload: user
         })
-        console.log('Estoy en SETUSER')
+        console.log('Estoy en SETUSER del CONTEXTO')
         console.log(user)
+        console.log(state)
     }
 
     const deleteUserAuthenticated = (user) => {
