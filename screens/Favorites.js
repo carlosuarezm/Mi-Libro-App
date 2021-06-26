@@ -5,32 +5,17 @@ import React, { useState, useContext, useEffect } from 'react'
 import {
     View,
     Text,
-    StyleSheet,
     TouchableOpacity,
     Image,
     Dimensions,
     Animated,
-    StatusBar
 } from 'react-native'
 
-import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
-
 import BookContext from '../context/Book/BookContext'
-
 import UserContext from '../context/User/UserContext.js';
-
-
-const fetchFont = async () => {
-    await Font.loadAsync({
-        'Roboto-Black': require('../assets/fonts/Roboto-Black.ttf'),
-        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
-        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf')
-    })
-}
+import { stylesFavorites } from '../styles/FavoritesStyles.js'
+import fetchFont from '../styles/fonts.js'
 
 const { height, width } = Dimensions.get('window');
 const ITEM_SIZE = width * 0.74;
@@ -38,8 +23,8 @@ const SPACING = 10;
 const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2;
 
 const UserNotLoggedIn = () => (
-    <View style={styles.loadingContainer}>
-        <Text style={styles.paragraph}>¡Para acceder a su Lista de Favoritos debe estar logueado!</Text>
+    <View style={stylesFavorites.loadingContainer}>
+        <Text style={stylesFavorites.paragraph}>¡Para acceder a su Lista de Favoritos debe estar logueado!</Text>
     </View>
 );
 
@@ -110,12 +95,12 @@ const Favorites = ({ navigation }) => {
                 }}>
                     <TouchableOpacity onPress={() => navigation.navigate("BookDetails", { book: item })}>
                         {/* Book Cover */}
-                        <Image source={item.bookCover} resizeMode='cover' style={styles.imageBookCover}/>
+                        <Image source={item.bookCover} resizeMode='cover' style={stylesFavorites.imageBookCover}/>
 
                         {/* Book Info */}
-                        <View style={styles.bookInfoContainer}>
-                            <Text style={styles.bookName}>{item.bookName}</Text>
-                            <Text style={styles.authorName}>{item.author}</Text>
+                        <View style={stylesFavorites.bookInfoContainer}>
+                            <Text style={stylesFavorites.bookName}>{item.bookName}</Text>
+                            <Text style={stylesFavorites.authorName}>{item.author}</Text>
                         </View>
                     </TouchableOpacity>
                 </Animated.View>
@@ -124,17 +109,17 @@ const Favorites = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.favoritesContainer}>
+        <View style={stylesFavorites.favoritesContainer}>
             {/* Header */}
-            <View style={styles.favoritesHeaderContainer}>
-                <Text style={styles.favoritesTextHeader}>Mis Favoritos</Text >
+            <View style={stylesFavorites.favoritesHeaderContainer}>
+                <Text style={stylesFavorites.favoritesTextHeader}>Mis Favoritos</Text >
             </View>
 
             {favorites.length === 2
 
                 ?
-                <View style={styles.emptyFavoritesContainer}>
-                    <Text style={styles.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
+                <View style={stylesFavorites.emptyFavoritesContainer}>
+                    <Text style={stylesFavorites.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
                 </View>
 
                 : 
@@ -161,92 +146,3 @@ const Favorites = ({ navigation }) => {
 }
 
 export default Favorites
-
-
-
-const styles = StyleSheet.create({
-    loadingContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#1E1B26'
-    },
-    container: {
-        flex: 1,
-    },
-    paragraph: {
-        margin: 24,
-        fontSize: 18,
-        fontFamily: 'Roboto-Regular',
-        textAlign: 'center',
-        color: '#FFFFFF'
-    },
-    posterImage: {
-        width: '100%',
-        height: ITEM_SIZE * 1.2,
-        resizeMode: 'cover',
-        borderRadius: 24,
-        margin: 0,
-        marginBottom: 10,
-    },
-    favoritesContainer: {
-        flex: 1,
-        backgroundColor: '#1E1B26',
-        marginTop: StatusBar.currentHeight
-    },
-    favoritesHeaderContainer: {
-        flex: 0.5,
-        paddingHorizontal: 24,
-        marginTop: 50,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    favoritesTextHeader: {
-        fontFamily: 'Roboto-Regular',
-        fontSize: 22,
-        lineHeight: 22,
-        color: '#FFFFFF'
-    },
-    emptyFavoritesContainer: {
-        flex: 3,
-        paddingHorizontal: 24,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textEmptyFavorites: {
-        fontFamily: 'Roboto-Bold',
-        fontSize: 18,
-        lineHeight: 22,
-        color: '#64676D',
-        textAlign: 'center'
-    },
-    imageBookCover: {
-        width: 180,
-        height: 250,
-        borderRadius: 20
-    },
-    bookInfoContainer: {
-        marginTop: 12,
-        flexDirection: 'column',
-        width: 180,
-        height: 100,
-        justifyContent: 'flex-start'
-    },
-    bookName: {
-        fontFamily: 'Roboto-Medium',
-        marginLeft: 5,
-        textAlign: 'center',
-        width: 180,
-        color: '#000000'
-    },
-    authorName: {
-        fontFamily: 'Roboto-Light',
-        marginLeft: 5,
-        marginTop: 10,
-        textAlign: 'center',
-        width: 180,
-        color: '#000000'
-    }
-});

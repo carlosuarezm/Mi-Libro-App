@@ -15,17 +15,18 @@ import UserContext from './context/User/UserContext.js';
 
 const Stack = createStackNavigator()
 
-
 const App = () => {
   const { state, setUserAuthenticated } = useContext(UserContext)
   const { setBooksHistory } = useContext(BookContext)
 
-
   const checkUser = async () => {
     const user = await AsyncStorage.getData('@userData')
     if (user) {
+      console.log('APP - Vamos a setear al Contexto el Usuario')
+      console.log(user)
       setUserAuthenticated(user)
     }
+    return user
   }
 
   const checkBooksUser = async () => {
@@ -40,25 +41,26 @@ const App = () => {
     checkBooksUser()
   }, []);
 
-
+  console.log('APP - El Estado del Usuario es: ')
+  console.log(state)
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} /*initialRouteName={'Login'}*/>
-        {!state 
+        {!state
           ?
           <>
-            <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name='Home' component={Tabs} />
+            <Stack.Screen name='Login' component={Login}/>
+            <Stack.Screen name='Home' component={Tabs}/>
           </>
           :
           <>
-            <Stack.Screen name='Home' component={Tabs} />
-            <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name='Home' component={Tabs}/>
+            <Stack.Screen name='Login' component={Login}/>
           </>
         }
         
-        <Stack.Screen name='Camera' component={Camera} />
-        <Stack.Screen name='BookDetails' component={BookDetails} options={{ headerShown: false }} />
+        <Stack.Screen name='Camera' component={Camera}/>
+        <Stack.Screen name='BookDetails' component={BookDetails}/>
       </Stack.Navigator>
 
       <StatusBar style='light' backgroundColor='#1E1B26' />

@@ -1,41 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Image, Dimensions, StatusBar } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, Image } from 'react-native'
 import iconCamera from '../assets/camera.png'
 import iconLogOut from '../assets/logout.png'
 import iconLogIn from '../assets/login2.png'
-import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import BookContext from '../context/Book/BookContext.js'
-import { Constants } from 'expo-camera'
-
 import AsyncStorage from '../utils/storage'
-
 import UserContext from '../context/User/UserContext.js';
+import fetchFont from '../styles/fonts.js'
+import {stylesHome} from '../styles/HomeStyles.js'
 
-
-const fetchFont = async () => {
-    await Font.loadAsync({
-        'Roboto-Black': require('../assets/fonts/Roboto-Black.ttf'),
-        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
-        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf')
-    })
-}
-
-const { width, height } = Dimensions.get('window');
-const ITEM_SIZE = width * 0.72;
-const SPACING = 10;
 
 const Home = ({ navigation }) => {
-    const [books, setBooks] = useState();
     const { booksHistory, setBooksHistory } = useContext(BookContext)
     const { state, setUserAuthenticated } = useContext(UserContext)
 
     //Boton LOGOUT
     async function logOut() {
-        await AsyncStorage.clearData();
+        await AsyncStorage.clearData('@userData', '@booksHistory');
+        // setBooksHistory(null)
         setUserAuthenticated(null)
         navigation.navigate('Login')
     }
@@ -43,15 +26,16 @@ const Home = ({ navigation }) => {
     //Fuentes
     const [fontLoaded, setFontLoaded] = useState(false)
 
+    if (!fontLoaded) {
+        return <AppLoading startAsync={fetchFont}
+            onError={() => console.log("ERROR")}
+            onFinish={() => {
+                setFontLoaded(true)
+            }}
+        />
+    }
+
     function renderHeader() {
-        if (!fontLoaded) {
-            return <AppLoading startAsync={fetchFont}
-                onError={() => console.log("ERROR")}
-                onFinish={() => {
-                    setFontLoaded(true)
-                }}
-            />
-        }
 
         return (
             <>
@@ -59,26 +43,26 @@ const Home = ({ navigation }) => {
                 {state && state.payload
                     ?
                     <>
-                        <View style={styles.headerLoggedIn}>
-                            <Text style={styles.headerGreeting}>Hola</Text>
-                            <Text style={styles.headerText}>{state.payload.name}</Text>
+                        <View style={stylesHome.headerLoggedIn}>
+                            <Text style={stylesHome.headerGreeting}>Hola</Text>
+                            <Text style={stylesHome.headerText}>{state.payload.name}</Text>
                         </View>
 
-                        <TouchableOpacity style={styles.touchButtonHeader} onPress={logOut}>
-                            <View style={styles.touchImageButtonHeader}>
+                        <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={logOut}>
+                            <View style={stylesHome.touchImageButtonHeader}>
                                 <Image source={iconLogOut} resizeMode='contain' style={{ width: 20, height: 20 }} />
                             </View>
                         </TouchableOpacity>
                     </>
                     :
                     <>
-                        <View style={styles.headerLoggedIn}>
-                            <Text style={styles.headerGreeting}>Hola</Text>
-                            <Text style={styles.headerText}>¡Que tengas un buen día!</Text>
+                        <View style={stylesHome.headerLoggedIn}>
+                            <Text style={stylesHome.headerGreeting}>Hola</Text>
+                            <Text style={stylesHome.headerText}>¡Que tengas un buen día!</Text>
                         </View>
 
-                        <TouchableOpacity style={styles.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
-                            <View style={styles.touchImageButtonHeader}>
+                        <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
+                            <View style={stylesHome.touchImageButtonHeader}>
                                 <Image source={iconLogIn} resizeMode='contain' style={{ width: 28, height: 28 }} />
                             </View>
                         </TouchableOpacity>
@@ -90,49 +74,40 @@ const Home = ({ navigation }) => {
 
     function renderMyBookSection() {
 
-        if (!fontLoaded) {
-            return <AppLoading startAsync={fetchFont}
-                onError={() => console.log("ERROR")}
-                onFinish={() => {
-                    setFontLoaded(true)
-                }}
-            />
-        }
-
         return (
             <>
                 {/* Header */}
-                <View style={styles.headerBookSection}>
-                    <Text style={styles.textHeaderBookSection}>Mi última busqueda</Text>
+                <View style={stylesHome.headerBookSection}>
+                    <Text style={stylesHome.textHeaderBookSection}>Mi última busqueda</Text>
                 </View>
 
                 {/* Books */}
                 {booksHistory === null || booksHistory.id === undefined
 
                     ?
-                    <View style={styles.booksContainer}>
-                        <Text style={styles.textBooks}>
+                    <View style={stylesHome.booksContainer}>
+                        <Text style={stylesHome.textBooks}>
                             No tiene búsquedas recientes.
                         </Text>
-                        <Text style={styles.textBooks}>
+                        <Text style={stylesHome.textBooks}>
                             ¡Realice una búsqueda!
                         </Text>
                     </View>
 
                     :
-                    <View style={styles.bookContainer}>
+                    <View style={stylesHome.bookContainer}>
                         <TouchableOpacity
-                            style={styles.touchBook}
+                            style={stylesHome.touchBook}
                             onPress={() => navigation.navigate("BookDetails", {
                                 book: booksHistory
                             })}
                         >
                             {/* Book Cover */}
-                            <Image source={booksHistory.bookCover} resizeMode='contain' style={styles.imageBook} />
+                            <Image source={booksHistory.bookCover} resizeMode='contain' style={stylesHome.imageBook} />
 
                             {/* Book Info */}
-                            <View style={styles.bookInfoContainer}>
-                                <Text style={styles.textBookInfo}>{booksHistory.author}</Text>
+                            <View style={stylesHome.bookInfoContainer}>
+                                <Text style={stylesHome.textBookInfo}>{booksHistory.author}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -142,25 +117,17 @@ const Home = ({ navigation }) => {
     }
 
     function renderCameraSection() {
-        if (!fontLoaded) {
-            return <AppLoading startAsync={fetchFont}
-                onError={() => console.log("ERROR")}
-                onFinish={() => {
-                    setFontLoaded(true)
-                }}
-            />
-        }
 
         return (
             <>
                 {/* Camera */}
-                <TouchableOpacity style={styles.touchCamera} onPress={() => navigation.navigate("Camera")}>
-                    <View style={styles.cameraContainer}>
-                        <View style={styles.imageCameraContainer}>
-                            <Image source={iconCamera} resizeMode='contain' style={styles.imageCamera} />
+                <TouchableOpacity style={stylesHome.touchCamera} onPress={() => navigation.navigate("Camera")}>
+                    <View style={stylesHome.cameraContainer}>
+                        <View style={stylesHome.imageCameraContainer}>
+                            <Image source={iconCamera} resizeMode='contain' style={stylesHome.imageCamera} />
                         </View>
 
-                        <Text style={styles.textCamera}>Buscar</Text>
+                        <Text style={stylesHome.textCamera}>Buscar</Text>
                     </View>
                 </TouchableOpacity>
             </>
@@ -169,17 +136,17 @@ const Home = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1B26', marginTop: StatusBar.currentHeight }}>
+        <SafeAreaView style={stylesHome.containerHome}>
             {/* Header Section */}
-            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center' }}>
+            <View style={stylesHome.containerHeaderSection}>
                 {renderHeader()}
             </View>
             {/* Books Section */}
-            <View style={{ flex: 3 }}>
+            <View style={stylesHome.containerBooksSection}>
                 {renderMyBookSection()}
             </View>
             {/* Camera Section */}
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={stylesHome.containerCameraSection}>
                 {renderCameraSection()}
             </View>
         </SafeAreaView>
@@ -187,129 +154,3 @@ const Home = ({ navigation }) => {
 }
 
 export default Home
-
-const styles = StyleSheet.create({
-    touchCamera: {
-        backgroundColor: '#F96D41',
-        height: 50,
-        paddingLeft: 3,
-        paddingRight: 12,
-        borderRadius: 20,
-        width: 150
-    },
-    cameraContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    imageCameraContainer: {
-        width: 30,
-        height: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 25,
-        backgroundColor: 'rgba(0,0,0,0.5)'
-    },
-    textCamera: {
-        marginLeft: 8,
-        color: '#FFFFFF',
-        fontFamily: 'Roboto-Regular',
-        fontSize: 16,
-        lineHeight: 22
-    },
-    headerBookSection: {
-        flex: 1,
-        paddingHorizontal: 24,
-        marginTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textHeaderBookSection: {
-        fontFamily: 'Roboto-Light',
-        fontSize: 18,
-        lineHeight: 21,
-        color: '#FFFFFF',
-        textAlign: 'center'
-    },
-    booksContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    textBooks: {
-        fontFamily: 'Roboto-Regular',
-        fontSize: 16,
-        lineHeight: 22,
-        color: '#64676D',
-        textAlign: 'center'
-    },
-    bookContainer: {
-        flex: 4,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    touchBook: {
-        margin: 0,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    imageBook: {
-        width: 180,
-        height: 230,
-        borderRadius: 3
-    },
-    bookInfoContainer: {
-        marginTop: 12,
-        flexDirection: 'row',
-        width: 180,
-        height: 25,
-        justifyContent: 'center'
-    },
-    textBookInfo: {
-        fontFamily: 'Roboto-Regular',
-        textAlign: 'center',
-        width: 180,
-        height: 200,
-        color: '#FFFFFF'
-    },
-    headerGreeting: {
-        color: '#FFFFFF',
-        fontFamily: 'Roboto-Thin',
-        fontSize: 16,
-        lineHeight: 22
-    },
-    headerText: {
-        color: '#FFFFFF',
-        fontFamily: 'Roboto-Medium',
-        fontSize: 18,
-        lineHeight: 30
-    },
-    headerLoggedIn: {
-        flex: 1,
-        marginTop: 50
-    },
-    touchButtonHeader: {
-        backgroundColor: '#364156',
-        height: 40,
-        paddingLeft: 12,
-        paddingRight: 12,
-        borderRadius: 20,
-        marginTop: 50
-    },
-    touchImageButtonHeader: {
-        flex: 1,
-        flexDirection: 'row',
-        width: 32,
-        height: 32,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 25,
-        backgroundColor: 'rgba(0,0,0,0.5)'
-    },
-    imageCamera: {
-        width: 20,
-        height: 20
-    }
-})

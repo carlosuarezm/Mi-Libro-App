@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import { reconocerPorTexto } from "../utils/ApiTextoReqs.js";
 import { buscador } from "../utils/ApiLibro.js";
-import iconUpload from '../assets/upload2.png'
+import iconUpload from '../assets/upload3.png'
 import iconSwitchCamera from '../assets/switchcamera2.png'
 import iconTakeAPicture from '../assets/takeapicture.png'
 
@@ -155,7 +155,7 @@ export default function CameraTest({ navigation }) {
                 <View style={{ flex: 0.2, flexDirection: 'row', backgroundColor: "#1E1B26", justifyContent:'space-between', alignItems:'center'}}>
                     <TouchableOpacity
                         // style={{ position: 'absolute', bottom: 20, left: 20 }}
-                        style={{left:20}}
+                        style={{left:20, backgroundColor:'#FFFFFF', borderRadius: 25, padding:1}}
                         onPress={() => {
                             setType(
                                 type === Camera.Constants.Type.back
@@ -167,8 +167,8 @@ export default function CameraTest({ navigation }) {
                             source={iconSwitchCamera}
                             resizeMode='contain'
                             style={{
-                                width: 55,
-                                height: 55
+                                width: 48,
+                                height: 48
                             }}
                         />
                         {/* <Icon name="refresh-ccw" size={50} color="white" /> */}
@@ -181,23 +181,23 @@ export default function CameraTest({ navigation }) {
                             source={iconTakeAPicture}
                             resizeMode='contain'
                             style={{
-                                width: 55,
-                                height: 55
+                                width: 60,
+                                height: 60
                             }}
                         />
                         {/* <Icon name="aperture" size={50} color="white" /> */}
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={{right:20}}
+                        style={{right:20, backgroundColor:'#FFFFFF', borderRadius: 25}}
                         // style={{ position: 'absolute', bottom: 20, right: 20 }}
                         onPress={openImagePickerAsync}>
                         <Image
                             source={iconUpload}
                             resizeMode='contain'
                             style={{
-                                width: 55,
-                                height: 55
+                                width: 50,
+                                height: 50
                             }}
                         />
                         {/* <Icon name="upload" size={50} color="white" /> */}

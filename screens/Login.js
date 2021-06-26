@@ -10,6 +10,7 @@ import AsyncStorage from '../utils/storage.js';
 import iconGoogle from '../assets/logogoogle.png'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
+import fetchFont from '../styles/fonts.js'
 
 
 const Login = (props) => {
@@ -28,11 +29,8 @@ const Login = (props) => {
 
     const { type, accessToken, user } = await Google.logInAsync(config);
     const res = { accessToken, user }
-
+    
     if (type === 'success') {
-      console.log('Datos de Google')
-      console.log(user)
-      // console.log('token', accessToken)
       await AsyncStorage.storeData('@userData', user)
       setUserAuthenticated(user)
       return res
@@ -44,7 +42,6 @@ const Login = (props) => {
 
     if (res) {
       setTimeout(async () => {
-        console.log(res.user)
         home()
       }, 300);
     }
@@ -52,48 +49,37 @@ const Login = (props) => {
 
   }
 
-  const loginUser = async () => {
-    try {
-      let aut = await firebase.auth().signInWithEmailAndPassword(email, password);
-      await AsyncStorage.storeData('@userData', aut)
-      console.log('Nombre de Firebase')
-      console.log(aut)
-      home()
+  // const loginUser = async () => {
+  //   try {
+  //     let aut = await firebase.auth().signInWithEmailAndPassword(email, password);
+  //     await AsyncStorage.storeData('@userData', aut)
+  //     console.log('Nombre de Firebase')
+  //     console.log(aut)
+  //     home()
 
-    } catch (err) {
-      console.log(err)
-      if (!email || err.code == "auth/argument-error") {
-        err.message = "Ingrese datos"
-      } else if (err.code == "auth/invalid-email") {
-        err.message = "La dirección de mail es inválida"
-      } else if (err.code == "auth/user-not-found" || "auth/wrong-password") {
-        err.message = "Usuario o contraseña inválida"
-      }
-      setError(err.message);
-    }
-  }
+  //   } catch (err) {
+  //     console.log(err)
+  //     if (!email || err.code == "auth/argument-error") {
+  //       err.message = "Ingrese datos"
+  //     } else if (err.code == "auth/invalid-email") {
+  //       err.message = "La dirección de mail es inválida"
+  //     } else if (err.code == "auth/user-not-found" || "auth/wrong-password") {
+  //       err.message = "Usuario o contraseña inválida"
+  //     }
+  //     setError(err.message);
+  //   }
+  // }
+
   const home = async () => {
     props.navigation.navigate('Home')
   }
 
-  const register = () => {
-    props.navigation.navigate('Register')
+  // const register = () => {
+  //   props.navigation.navigate('Register')
 
-  }
+  // }
 
   const [fontLoaded, setFontLoaded] = useState(false)
-
-
-  const fetchFont = async () => {
-    await Font.loadAsync({
-        'Roboto-Black': require('../assets/fonts/Roboto-Black.ttf'),
-        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
-        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        'Roboto-Thin': require('../assets/fonts/Roboto-Thin.ttf')
-    })
-  } 
 
   if (!fontLoaded) {
     return <AppLoading startAsync={fetchFont}
@@ -107,8 +93,6 @@ const Login = (props) => {
 
   return (
     <View style={styles.container}>
-
-      {/* <Text style={styles.title}>Bienvenid@s a MiLibro!</Text> */}
       <Image
         source={logoApp}
         resizeMode='cover'
