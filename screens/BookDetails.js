@@ -156,9 +156,9 @@ const BookDetail = ({ route, navigation }) => {
     }
 
     return (
-        <View style={stylesBookDetails.containerBookCoverSection}>
+        <View style={stylesBookDetails.containerBookDetails}>
             {/* Book Cover Section */}
-            <View style={{ flex: 4 }}>
+            <View style={stylesBookDetails.containerBookCoverSection}>
                 {renderBookInfoSection()}
             </View>
 

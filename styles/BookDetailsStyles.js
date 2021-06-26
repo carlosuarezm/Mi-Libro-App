@@ -119,13 +119,16 @@ const stylesBookDetails = StyleSheet.create({
         bottom: 0,
         left: 0
     },
-    containerBookCoverSection: {
+    containerBookDetails: {
         flex: 1, 
         backgroundColor: '#1E1B26', 
         marginTop: StatusBar.currentHeight
     },
     containerDescriptionSection: {
         flex: 2.5
+    },
+    containerBookCoverSection: {
+        flex: 4
     }
 });
 

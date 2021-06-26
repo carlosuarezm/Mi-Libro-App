@@ -120,7 +120,7 @@ export default function CameraTest({ navigation }) {
             bookName: libro.title,
             bookCover: { uri: libro.imageLinks.thumbnail },
             rating: libro.averageRating != null ? libro.averageRating : 'N/A',
-            pageNo: libro.pageCount ? libros.pageCount : 'N/A',
+            pageNo: libro.pageCount ? libro.pageCount : 'N/A',
             author: libro.authors[0],
             description: libro.description ? libro.description : 'No se ha encontrado descripción del libro solicitado.',
             backgroundColor: 'rgba(240, 240, 232, 0.9)',
@@ -140,7 +140,7 @@ export default function CameraTest({ navigation }) {
             }
         }
 
-        navigation.navigate('BookDetails', { book })
+        navigation.replace('BookDetails', { book })
     }
 
 
