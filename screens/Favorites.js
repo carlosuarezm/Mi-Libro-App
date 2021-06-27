@@ -1,6 +1,4 @@
-import { getFavorites, addToFavorite, addFavorites } from '../pruebaFavoritos/db'
-import getBooks from '../apis/Books'
-
+import { getFavCache } from '../persistenciaFavs/db.js'
 import React, { useState, useContext, useEffect } from 'react'
 import {
     View,
@@ -29,28 +27,25 @@ const UserNotLoggedIn = () => (
 );
 
 
+
+
 const Favorites = ({ navigation }) => {
     const [favorites, setFavorites] = useState([]);
     const [fontLoaded, setFontLoaded] = useState(false)
     const scrollX = React.useRef(new Animated.Value(0)).current;
 
     const { favBooks, fillFavBooks, setFavBooks } = useContext(BookContext)
-    const { state } = useContext(UserContext)
+    const { state, setUserAuthenticated } = useContext(UserContext)
 
-    // useEffect(() => {
-    //     const favorites = getFavorites()
-    //     console.log(favorites)
-    //     setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
-    // }, [favorites])
+
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            const favorites = getFavorites()
-            console.log(favorites)
+        const unsubscribe = navigation.addListener('focus', async () => {
+            const favorites = getFavCache()
             setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
         });
 
         return unsubscribe;
-    }, [navigation]);
+    }, [navigation, state]);
 
 
     if (!state) {
@@ -60,7 +55,7 @@ const Favorites = ({ navigation }) => {
     // **** Para las Fuentes **** //
     if (!fontLoaded) {
         return <AppLoading startAsync={fetchFont}
-            onError={() => console.log("ERROR")}
+            onError={() => console.log("ERROR en FONT")}
             onFinish={() => {
                 setFontLoaded(true)
             }}
@@ -69,7 +64,6 @@ const Favorites = ({ navigation }) => {
 
     const renderItem = ({ item, index }) => {
         if (!item.bookCover) {
-            console.log(11)
             return <View style={{ width: SPACER_ITEM_SIZE }} />;
         }
         const inputRange = [
@@ -95,7 +89,7 @@ const Favorites = ({ navigation }) => {
                 }}>
                     <TouchableOpacity onPress={() => navigation.navigate("BookDetails", { book: item })}>
                         {/* Book Cover */}
-                        <Image source={item.bookCover} resizeMode='cover' style={stylesFavorites.imageBookCover}/>
+                        <Image source={item.bookCover} resizeMode='cover' style={stylesFavorites.imageBookCover} />
 
                         {/* Book Info */}
                         <View style={stylesFavorites.bookInfoContainer}>
@@ -115,14 +109,14 @@ const Favorites = ({ navigation }) => {
                 <Text style={stylesFavorites.favoritesTextHeader}>Mis Favoritos</Text >
             </View>
 
-            {favorites.length === 2
+            {favorites.length == 2
 
                 ?
                 <View style={stylesFavorites.emptyFavoritesContainer}>
                     <Text style={stylesFavorites.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
                 </View>
 
-                : 
+                :
                 <Animated.FlatList
                     showsHorizontalScrollIndicator={false}
                     data={favorites}

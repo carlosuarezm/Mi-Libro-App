@@ -1,15 +1,10 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { NavigationContainer } from '@react-navigation/native';
-import Gallery from '../screens/Gallery.js';
 import Home from '../screens/Home.js'
-import BookDetails from '../screens/BookDetails.js';
 import Favorites from '../screens/Favorites.js'
-import {Image} from 'react-native'
+import { Image } from 'react-native'
 import iconHome from '../assets/home.png'
 import iconFav from '../assets/fav.png'
-import iconSearch from '../assets/search.png'
-// import { enableScreens } from 'react-native-screens';
 
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +15,7 @@ const tabOptions = {
     showLabel: false,
     style: {
         backgroundColor: '#FFFFFF',
-        borderRadius:0,
+        borderRadius: 0,
         height: 60
     }
 }
