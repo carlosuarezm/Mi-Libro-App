@@ -8,27 +8,27 @@ import BookContext from '../context/Book/BookContext.js'
 import AsyncStorage from '../utils/storage'
 import UserContext from '../context/User/UserContext.js';
 import fetchFont from '../styles/fonts.js'
-import {stylesHome} from '../styles/HomeStyles.js'
+import { stylesHome } from '../styles/HomeStyles.js'
+import { logOutFavorites } from "../persistenciaFavs/db.js";
 
 
 const Home = ({ navigation }) => {
     const { booksHistory, setBooksHistory } = useContext(BookContext)
     const { state, setUserAuthenticated } = useContext(UserContext)
 
-    //Boton LOGOUT
     async function logOut() {
         await AsyncStorage.clearData();
         setBooksHistory({})
         setUserAuthenticated(null)
+        logOutFavorites()
         navigation.navigate('Login')
     }
 
-    //Fuentes
     const [fontLoaded, setFontLoaded] = useState(false)
 
     if (!fontLoaded) {
         return <AppLoading startAsync={fetchFont}
-            onError={() => console.log("ERROR")}
+            onError={() => console.log("ERROR en FONT")}
             onFinish={() => {
                 setFontLoaded(true)
             }}

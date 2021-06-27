@@ -42,7 +42,7 @@ export default function CameraTest({ navigation }) {
         if (miCamera) {
             let photo = await miCamera.takePictureAsync();
             setIsLoading(true)
-            //console.log(photo)
+
             if (photo) {
                 let uri = photo.uri.split(".")
                 let format = uri[uri.length - 1]
@@ -52,7 +52,7 @@ export default function CameraTest({ navigation }) {
                     name: `test.${format}`
 
                 }
-                //console.log('New File',newFile)
+
                 await handleUpload(newFile)
 
             }
@@ -67,7 +67,6 @@ export default function CameraTest({ navigation }) {
             return;
         }
         const pickerResult = await ImagePicker.launchImageLibraryAsync()
-        //console.log('1-', pickerResult)
 
         if (pickerResult.cancelled === true) {
             return;
@@ -96,18 +95,18 @@ export default function CameraTest({ navigation }) {
 
         try {
             if (!res.data.url) {
-               throw new Error('Error en la carga de imagen')
+                throw new Error('Error en la carga de imagen')
             }
-    
+
             const text = await reconocerPorTexto(res.data.url)
             if (!text) {
                 throw new Error('Error inesperado intente de nuevo')
             }
-    
+
             libro = await buscador.libroPorReconocimiento(text)
             if (!libro) {
                 throw new Error('Libro no encontrado')
-            }    
+            }
         } catch (error) {
             alert(error.message)
             setIsLoading(false)
@@ -155,10 +154,10 @@ export default function CameraTest({ navigation }) {
                         setMiCamera(ref);
                     }}>
                 </Camera>
-                <View style={{ flex: 0.2, flexDirection: 'row', backgroundColor: "#1E1B26", justifyContent:'space-between', alignItems:'center'}}>
+                <View style={{ flex: 0.2, flexDirection: 'row', backgroundColor: "#1E1B26", justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity
                         // style={{ position: 'absolute', bottom: 20, left: 20 }}
-                        style={{left:20, backgroundColor:'#FFFFFF', borderRadius: 25, padding:1}}
+                        style={{ left: 20, backgroundColor: '#FFFFFF', borderRadius: 25, padding: 1 }}
                         onPress={() => {
                             setType(
                                 type === Camera.Constants.Type.back
@@ -192,7 +191,7 @@ export default function CameraTest({ navigation }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={{right:20, backgroundColor:'#FFFFFF', borderRadius: 25}}
+                        style={{ right: 20, backgroundColor: '#FFFFFF', borderRadius: 25 }}
                         // style={{ position: 'absolute', bottom: 20, right: 20 }}
                         onPress={openImagePickerAsync}>
                         <Image
@@ -219,8 +218,8 @@ export default function CameraTest({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, 
-        marginTop: StatusBar.currentHeight 
+        flex: 1,
+        marginTop: StatusBar.currentHeight
     },
     camera: {
         flex: 0.8,

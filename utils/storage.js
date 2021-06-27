@@ -9,15 +9,14 @@ AsyncStorage.storeData = async (key, value) => {
         }
         await Storage.setItem(key, value)
     } catch (error) {
-        // Error guardando data
-        console.log(error.message)
+        alert('Error inesperado!!')
     }
 }
 
 AsyncStorage.getData = async (key) => {
     try {
         const value = await Storage.getItem(key)
-        return JSON.parse(value) 
+        return JSON.parse(value)
     } catch (error) {
         return null
     }
@@ -25,18 +24,17 @@ AsyncStorage.getData = async (key) => {
 
 AsyncStorage.clearData = async () => {
     try {
-      await Storage.clear()
+        await Storage.clear()
     } catch (error) {
-        console.log(error.message)
+        alert('Error inesperado!!!')
     }
 }
 
 AsyncStorage.removeData = async (key) => {
     try {
-      await Storage.removeItem(key)
-    } catch(e) {
-      // remove error
-      console.log(e)
+        await Storage.removeItem(key)
+    } catch (e) {
+        alert('Error inesperado!!!')
     }
 }
 

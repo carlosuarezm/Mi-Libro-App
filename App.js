@@ -11,6 +11,7 @@ import BookState from './context/Book/BookState.js';
 import BookContext from './context/Book/BookContext.js'
 import UserState from './context/User/UserState.js';
 import UserContext from './context/User/UserContext.js';
+import { getFavorites } from "./persistenciaFavs/db.js";
 
 
 const Stack = createStackNavigator()
@@ -22,11 +23,12 @@ const App = () => {
   const checkUser = async () => {
     const user = await AsyncStorage.getData('@userData')
     if (user) {
-      console.log('APP - Vamos a setear al Contexto el Usuario')
-      console.log(user)
       setUserAuthenticated(user)
-      console.log('Despues del SET')
-      console.log(state)
+      try {
+        await getFavorites(user.id)
+      } catch (error) {
+        alert('Error inesperado, intente de nuevo')
+      }
     }
     return user
   }
@@ -36,8 +38,6 @@ const App = () => {
     if (book) {
       setBooksHistory(book)
     }
-    console.log('Despues del checkUser')
-    console.log(state)
   }
 
   useEffect(() => {
@@ -45,32 +45,21 @@ const App = () => {
     checkBooksUser()
   }, []);
 
-  console.log('APP - El Estado del Usuario es: ')
-  console.log(state)
-
-  useEffect(() => {
-    console.log('Effect del State')
-    console.log(state)
-  }, [state]);
-
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} /*initialRouteName={'Login'}*/>
+      <Stack.Navigator screenOptions={{ headerShown: false }} >
         {!state ?
           <>
             <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-            {/* <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} /> */}
           </>
           :
           null
         }
 
-
-        {/* Tabs */}
         <Stack.Screen name='Home' component={Tabs} />
-
         <Stack.Screen name='Camera' component={Camera} />
         <Stack.Screen name='BookDetails' component={BookDetails} />
+
       </Stack.Navigator>
 
       <StatusBar style='light' backgroundColor='#1E1B26' />

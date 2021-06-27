@@ -1,15 +1,15 @@
 import React, { useState, useContext } from 'react'
-import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native'
+import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView } from 'react-native'
 import iconBack from '../assets/back.png'
 import iconLike from '../assets/like3.png'
 import AppLoading from 'expo-app-loading'
 import BookContext from '../context/Book/BookContext.js'
 import UserContext from '../context/User/UserContext.js';
-import { addToFavorite, getFavorites, getIsFavorite, removeAFavorite } from '../pruebaFavoritos/db'
+import { addToFavorite, getIsFavorite, removeAFavorite } from '../persistenciaFavs/db.js'
 import fetchFont from '../styles/fonts.js'
 import { stylesBookDetails } from '../styles/BookDetailsStyles.js'
-import {LineDivider} from '../styles/LineDivider'
-import Firebase from '../database/firebase.js'
+import { LineDivider } from '../styles/LineDivider'
+
 
 const BookDetail = ({ route, navigation }) => {
     const [fontLoaded, setFontLoaded] = useState(false)
@@ -28,41 +28,38 @@ const BookDetail = ({ route, navigation }) => {
         (() => {
             if (state && book) {
                 const response = getIsFavorite(book.id)
-                response ? setIsFavorite(true) : console.log('no era favorito')
-            } else {
-                console.log('Effect. No se pudo analizar si era o no favorito')
+                response ? setIsFavorite(true) : null
             }
         })()
     }, [state, book])
 
 
     async function addFavorite() {
-        if (!state) {
-            console.log('no estas registrado')
-        } else {
-            // addToFavorite(book)
-            const idUser = state.id;
-            await Firebase.db.collection("favoritos").add({idUser, book})
-            setIsFavorite(true)
-            // fillFavBooks(book)
-            console.log('El libro ha sido añadido a Favoritos')
+
+        if (state) {
+            try {
+                await addToFavorite(state, book)
+                setIsFavorite(true)
+            } catch (error) {
+                alert('Error inesperado')
+            }
         }
     }
 
-    function removeFavorite() {
-        if (!state) {
-            console.log('no estas registrado')
-        } else {
-            removeAFavorite(book.id)
-            setIsFavorite(false)
-            // deleteFavBook(book)
-            console.log('El libro ha sido eliminado de Favoritos')
+    async function removeFavorite() {
+        if (state) {
+            try {
+                await removeAFavorite(state, book)
+                setIsFavorite(false)
+            } catch (error) {
+                alert('Error inesperado')
+            }
         }
     }
 
     if (!fontLoaded) {
         return <AppLoading startAsync={fetchFont}
-            onError={() => console.log("ERROR")}
+            onError={() => console.log("ERROR FONT")}
             onFinish={() => {
                 setFontLoaded(true)
             }}
@@ -74,15 +71,15 @@ const BookDetail = ({ route, navigation }) => {
 
         return (
             <View style={{ flex: 1 }}>
-                <ImageBackground source={book.bookCover} resizeMode='cover' style={stylesBookDetails.imageBackground}/>
+                <ImageBackground source={book.bookCover} resizeMode='cover' style={stylesBookDetails.imageBackground} />
 
                 {/* Color Overlay */}
-                <View style={stylesBookDetails.colorOverlay}/>
+                <View style={stylesBookDetails.colorOverlay} />
 
                 {/* Navigation Header */}
                 <View style={stylesBookDetails.containerHeader}>
                     <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => navigation.goBack()}>
-                        <Image source={iconBack} resizeMode='contain' style={stylesBookDetails.imageIconBack}/>
+                        <Image source={iconBack} resizeMode='contain' style={stylesBookDetails.imageIconBack} />
                     </TouchableOpacity>
 
                     <View style={stylesBookDetails.containerDetailTitle}>
@@ -105,7 +102,7 @@ const BookDetail = ({ route, navigation }) => {
 
                 {/* Book Cover */}
                 <View style={stylesBookDetails.containerBookCover}>
-                    <Image source={book.bookCover} resizeMode='contain' style={stylesBookDetails.bookCoverImage}/>
+                    <Image source={book.bookCover} resizeMode='contain' style={stylesBookDetails.bookCoverImage} />
                 </View>
 
                 {/* Book Name and Author */}

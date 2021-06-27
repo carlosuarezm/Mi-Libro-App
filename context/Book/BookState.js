@@ -2,18 +2,14 @@ import React from 'react'
 import { useReducer } from 'react'
 import BookReducer from './BookReducer.js'
 import BookContext from './BookContext.js'
-import getBooks from '../../apis/Books.js'
-import AsyncStorage from '../../utils/storage'
-
-const historialDeLibros = getBooks();
 
 const BookState = (props) => {
-    
+
     const initialState = {
         booksHistory: {},
         favBooks: []
     }
-    
+
     const [state, dispatch] = useReducer(BookReducer, initialState);
 
     //-------------------- Historial de Búsquedas --------------------
@@ -43,10 +39,8 @@ const BookState = (props) => {
 
     //----------------------------------------------------------------
 
-    
+
     const fillFavBooks = (book) => {
-        // console.log('Estoy en el metodo fillFavBook de BookState')
-        // console.log(book)
         dispatch({
             type: 'FILL_FAV_BOOKS',
             payload: book
@@ -61,15 +55,13 @@ const BookState = (props) => {
     }
 
     const deleteFavBook = (book) => {
-        // console.log('Estoy en el metodo fillFavBook de BookState')
-        // console.log(book)
         dispatch({
             type: 'DELETE_FAV_BOOK',
             payload: book
         })
     }
 
-    return(
+    return (
         <BookContext.Provider value={{
             booksHistory: state.booksHistory,
             favBooks: state.favBooks,
@@ -101,4 +93,3 @@ export default BookState;
     //         payload: state.booksHistory
     //     })
     // }
-    

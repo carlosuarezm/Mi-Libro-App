@@ -1,92 +1,64 @@
 import React, { useState, useContext } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Image, StatusBar } from 'react-native';
-// import firebase from '../firebase/fire.js'
-// import "firebase/auth";
-import { SocialIcon } from 'react-native-elements'
+import { StyleSheet, Text, View, TouchableOpacity, Image, StatusBar } from 'react-native';
 import * as Google from 'expo-google-app-auth'
 import logoApp from '../assets/logo.png'
 import UserContext from '../context/User/UserContext.js';
 import AsyncStorage from '../utils/storage.js';
 import iconGoogle from '../assets/logogoogle.png'
-import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import fetchFont from '../styles/fonts.js'
+import { getFavorites } from "../persistenciaFavs/db.js";
+import { ANDROID_CLIENTE_ID } from "@env";
 
 
 const Login = (props) => {
 
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
   const [error, setError] = useState('');
 
   const { setUserAuthenticated } = useContext(UserContext)
 
   const handledGoogleSingIn = async () => {
     const config = {
-      androidClientId: "628836821863-5jhatmlvu7hm5s6073dd9pl2vtpvciv5.apps.googleusercontent.com",
+      androidClientId: ANDROID_CLIENTE_ID,
       scopes: ['profile', 'email']
     }
+    const res = { accessToken, user }
 
     const { type, accessToken, user } = await Google.logInAsync(config);
-    const res = { accessToken, user }
-    
+
     if (type === 'success') {
       await AsyncStorage.storeData('@userData', user)
       setUserAuthenticated(user)
+      await getFavorites(user.id)
       return res
     }
   }
 
   const loginGoogle = async () => {
-    const res = await handledGoogleSingIn()
+    try {
+      const res = await handledGoogleSingIn()
 
-    if (res) {
-      setTimeout(async () => {
+      if (res) {
         home()
-      }, 300);
+      }
+
+    } catch (error) {
+      alert('Error inesperado')
     }
-
-
   }
-
-  // const loginUser = async () => {
-  //   try {
-  //     let aut = await firebase.auth().signInWithEmailAndPassword(email, password);
-  //     await AsyncStorage.storeData('@userData', aut)
-  //     console.log('Nombre de Firebase')
-  //     console.log(aut)
-  //     home()
-
-  //   } catch (err) {
-  //     console.log(err)
-  //     if (!email || err.code == "auth/argument-error") {
-  //       err.message = "Ingrese datos"
-  //     } else if (err.code == "auth/invalid-email") {
-  //       err.message = "La dirección de mail es inválida"
-  //     } else if (err.code == "auth/user-not-found" || "auth/wrong-password") {
-  //       err.message = "Usuario o contraseña inválida"
-  //     }
-  //     setError(err.message);
-  //   }
-  // }
 
   const home = async () => {
     props.navigation.navigate('Home')
   }
 
-  // const register = () => {
-  //   props.navigation.navigate('Register')
-
-  // }
-
   const [fontLoaded, setFontLoaded] = useState(false)
 
   if (!fontLoaded) {
     return <AppLoading startAsync={fetchFont}
-        onError={() => console.log("ERROR")}
-        onFinish={() => {
-            setFontLoaded(true)
-        }}
+      onError={() => console.log("ERROR en FONT")}
+      onFinish={() => {
+        setFontLoaded(true)
+      }}
     />
   }
 
@@ -103,39 +75,7 @@ const Login = (props) => {
         }}
       />
 
-      {/* <Text style={styles.text}>
-        Email
-      </Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={setEmail}
-        value={email}
-        placeholder="Ingrese su email"
-      />
-
-      <Text style={styles.text}>
-        Contraseña
-      </Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Ingrese su contraseña"
-        keyboardType="default"
-        secureTextEntry={true}
-      />
-
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={loginUser} style={styles.button}>
-          <Text style={styles.buttonText}>Ingresar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={register} style={styles.button}>
-          <Text style={styles.buttonText}>Registrarse</Text>
-        </TouchableOpacity>
-      </View> */}
-
-      <View style={{paddingTop: 50}}>
+      <View style={{ paddingTop: 50 }}>
         <TouchableOpacity
           style={{
             backgroundColor: '#FFFFFF',
@@ -164,7 +104,6 @@ const Login = (props) => {
           </View>
         </TouchableOpacity>
 
-        {/* <SocialIcon type="google" style={styles.googlelButton} onPress={loginGoogle} /> */}
       </View>
 
       <View style={styles.skipContainer}>
