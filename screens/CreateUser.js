@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
-import firebase from '../firebase/fire.js'
-import "firebase/auth";
+// import firebase from '../firebase/fire.js'
+// import "firebase/auth";
 import AsyncStorage from '../utils/storage.js';
 
 
@@ -15,24 +15,24 @@ const CreateUser = (props) => {
   const [loading, setLoading] = useState(true)
 
 
-  const generateUser = async () => {
-    try {
-      if (password != confirmPassword) {
-        throw new Error('Las contraseñas deben coincidir')
-      }
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      const usuario = firebase.auth().currentUser
-      await usuario.updateProfile({displayName: name})
-      const user = {email: usuario.email, name: usuario.displayName, id: usuario.uid}
-      await AsyncStorage.storeData('@userData', user)
-      // console.log('Usuario de Firebase')
-      // console.log(usuario)
-      alert('Se ha registrado correctamente')
-      props.navigation.navigate('Login')
-    } catch (err) {
-      setError(err.message);
-    }
-  }
+  // const generateUser = async () => {
+  //   try {
+  //     if (password != confirmPassword) {
+  //       throw new Error('Las contraseñas deben coincidir')
+  //     }
+  //     await firebase.auth().createUserWithEmailAndPassword(email, password);
+  //     const usuario = firebase.auth().currentUser
+  //     await usuario.updateProfile({displayName: name})
+  //     const user = {email: usuario.email, name: usuario.displayName, id: usuario.uid}
+  //     await AsyncStorage.storeData('@userData', user)
+  //     // console.log('Usuario de Firebase')
+  //     // console.log(usuario)
+  //     alert('Se ha registrado correctamente')
+  //     props.navigation.navigate('Login')
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
+  // }
 
 
 

@@ -9,6 +9,7 @@ import { addToFavorite, getFavorites, getIsFavorite, removeAFavorite } from '../
 import fetchFont from '../styles/fonts.js'
 import { stylesBookDetails } from '../styles/BookDetailsStyles.js'
 import {LineDivider} from '../styles/LineDivider'
+import Firebase from '../database/firebase.js'
 
 const BookDetail = ({ route, navigation }) => {
     const [fontLoaded, setFontLoaded] = useState(false)
@@ -35,11 +36,13 @@ const BookDetail = ({ route, navigation }) => {
     }, [state, book])
 
 
-    function addFavorite() {
+    async function addFavorite() {
         if (!state) {
             console.log('no estas registrado')
         } else {
-            addToFavorite(book)
+            // addToFavorite(book)
+            const idUser = state.id;
+            await Firebase.db.collection("favoritos").add({idUser, book})
             setIsFavorite(true)
             // fillFavBooks(book)
             console.log('El libro ha sido añadido a Favoritos')
@@ -145,9 +148,8 @@ const BookDetail = ({ route, navigation }) => {
             <View style={stylesBookDetails.containerDescription}>
                 <Text style={stylesBookDetails.textTitleDescription}>Descripcion</Text>
                 <ScrollView
-                    contentContainerStyle={{ paddingLeft: 8 }}
                     showsVerticalScrollIndicator={false}
-                    style={{ paddingBottom: 180 }}
+                    style={{ paddingBottom: 180, marginBottom:10 }}
                 >
                     <Text style={stylesBookDetails.textBookDescription} >{book.description}</Text>
                 </ScrollView>

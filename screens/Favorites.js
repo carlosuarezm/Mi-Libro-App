@@ -1,7 +1,7 @@
 import { getFavorites, addToFavorite, addFavorites } from '../pruebaFavoritos/db'
 import getBooks from '../apis/Books'
 
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import {
     View,
     Text,
@@ -9,6 +9,7 @@ import {
     Image,
     Dimensions,
     Animated,
+    ActivityIndicator
 } from 'react-native'
 
 import AppLoading from 'expo-app-loading'
@@ -37,20 +38,55 @@ const Favorites = ({ navigation }) => {
     const { favBooks, fillFavBooks, setFavBooks } = useContext(BookContext)
     const { state } = useContext(UserContext)
 
-    // useEffect(() => {
-    //     const favorites = getFavorites()
-    //     console.log(favorites)
-    //     setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
-    // }, [favorites])
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            const favorites = getFavorites()
+    const [isLoading, setIsLoading] = useState(true)
+
+
+    const setearFavoritos = async () => {
+        await getFavorites()
+        .then(favs => {
+            const favorites = favs;
             console.log(favorites)
             setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
-        });
+        })
+    }
 
-        return unsubscribe;
-    }, [navigation]);
+    useEffect(() => {
+        setearFavoritos().then(setIsLoading(false))
+    }, [isLoading])
+
+    // const loadBookFromServer = useCallback(async () => {
+    //     const favorites = await getFavorites()
+    //     console.log(favorites)
+    //     setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
+    //   }, []) // every time id changed, new book will be loaded
+
+    //   useEffect(() => {
+    //     loadBookFromServer()
+    //   }, [loadBookFromServer]) // useEffect will run once and when id changes
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         await getFavorites().then(favs => {
+    //             const favorites = favs;
+    //             console.log(favorites)
+    //             setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
+    //             setIsLoading(false)
+    //         })
+    //     };
+
+    //     fetchData();
+    // }, []);
+
+
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', async () => {
+    //         const favorites = await getFavorites()
+    //         console.log(favorites)
+    //         setFavorites([{ id: -1 }, ...favorites, { id: -2 }])
+    //     });
+
+    //     return unsubscribe;
+    // }, [navigation]);
 
 
     if (!state) {
@@ -95,7 +131,7 @@ const Favorites = ({ navigation }) => {
                 }}>
                     <TouchableOpacity onPress={() => navigation.navigate("BookDetails", { book: item })}>
                         {/* Book Cover */}
-                        <Image source={item.bookCover} resizeMode='cover' style={stylesFavorites.imageBookCover}/>
+                        <Image source={item.bookCover} resizeMode='cover' style={stylesFavorites.imageBookCover} />
 
                         {/* Book Info */}
                         <View style={stylesFavorites.bookInfoContainer}>
@@ -109,39 +145,45 @@ const Favorites = ({ navigation }) => {
     }
 
     return (
-        <View style={stylesFavorites.favoritesContainer}>
-            {/* Header */}
-            <View style={stylesFavorites.favoritesHeaderContainer}>
-                <Text style={stylesFavorites.favoritesTextHeader}>Mis Favoritos</Text >
-            </View>
-
-            {favorites.length === 2
-
-                ?
-                <View style={stylesFavorites.emptyFavoritesContainer}>
-                    <Text style={stylesFavorites.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
+        !isLoading
+            ?
+            <View style={stylesFavorites.favoritesContainer}>
+                {/* Header */}
+                <View style={stylesFavorites.favoritesHeaderContainer}>
+                    <Text style={stylesFavorites.favoritesTextHeader}>Mis Favoritos</Text >
                 </View>
 
-                : 
-                <Animated.FlatList
-                    showsHorizontalScrollIndicator={false}
-                    data={favorites}
-                    keyExtractor={item => `${item.id}`}
-                    horizontal
-                    contentContainerStyle={{ alignItems: 'center' }}
-                    snapToInterval={ITEM_SIZE}
-                    decelerationRate={0}
-                    bounces={false}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                        { useNativeDriver: true }
-                    )}
-                    scrollEventThrottle={16}
-                    renderItem={renderItem}
-                />
-            }
-        </View>
+                {favorites.length === 2
 
+                    ?
+                    <View style={stylesFavorites.emptyFavoritesContainer}>
+                        <Text style={stylesFavorites.textEmptyFavorites}>¡Su lista de Favoritos está vacía!</Text >
+                    </View>
+
+                    :
+                    <Animated.FlatList
+                        showsHorizontalScrollIndicator={false}
+                        data={favorites}
+                        keyExtractor={item => `${item.id}`}
+                        horizontal
+                        contentContainerStyle={{ alignItems: 'center' }}
+                        snapToInterval={ITEM_SIZE}
+                        decelerationRate={0}
+                        bounces={false}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                            { useNativeDriver: true }
+                        )}
+                        scrollEventThrottle={16}
+                        renderItem={renderItem}
+                    />
+                }
+            </View>
+
+            :
+            <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", padding: 10, backgroundColor: '#1E1B26' }}>
+                <ActivityIndicator size="large" color="#FFFFFF" ></ActivityIndicator>
+            </View>
     )
 }
 

@@ -139,7 +139,7 @@ export default function CameraTest({ navigation }) {
                 await AsyncStorage.storeData(`@booksHistory`, book)
             }
         }
-
+        //Para eliminar de la pila de screens a la pantalla cargando, porque si vamos para atras luego de buscar vuelve ahi
         navigation.replace('BookDetails', { book })
     }
 

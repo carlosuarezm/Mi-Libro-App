@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Image, StatusBar } from 'react-native';
-import firebase from '../firebase/fire.js'
-import "firebase/auth";
+// import firebase from '../firebase/fire.js'
+// import "firebase/auth";
 import { SocialIcon } from 'react-native-elements'
 import * as Google from 'expo-google-app-auth'
 import logoApp from '../assets/logo.png'

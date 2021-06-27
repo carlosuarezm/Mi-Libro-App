@@ -1,4 +1,5 @@
 import getBooks from "../apis/Books";
+import Firebase from "../database/firebase";
 
 const favorites = [];
 const books = getBooks();
@@ -50,7 +51,15 @@ function removeAFavorite(idBook){
     }
 }
 
-function getFavorites(){
+async function getFavorites(){
+    await Firebase.db.collection('favoritos').onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            const favoriteSave = favorites.find(fav => fav.id === doc.data().book.id)
+            favoriteSave ? null : favorites.push(doc.data().book)
+            console.log(doc.data().book)
+        })
+    })
+
     return favorites
 }
 
