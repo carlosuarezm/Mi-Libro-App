@@ -10,7 +10,6 @@ const UserState = (props) => {
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
-    //-------------------- Historial de Búsquedas --------------------
     const setUserAuthenticated = (user) => {
         dispatch({
             type: 'SET_USER_AUTHENTICATED',

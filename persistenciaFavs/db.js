@@ -1,10 +1,9 @@
 import axios from "axios"
-import {Alert} from 'react-native'
+import { Alert } from 'react-native'
 
 let favorites = [];
 
 async function addToFavorite(state, book) {
-
     try {
         const req = {
             id_user: state.id,
@@ -13,18 +12,15 @@ async function addToFavorite(state, book) {
         const { data } = await axios.post('https://mi-libro-app.herokuapp.com/api/favoritos/agregar', req)
         favorites = data
     } catch (error) {
-        Alert.alert('¡Lo sentimos!', error.message, [{text: 'ok'}])
+        Alert.alert('¡Lo sentimos!', error.message, [{ text: 'ok' }])
     }
-
 }
 
 function getFavCache() {
     return favorites
 }
 
-
 async function removeAFavorite(state, book) {
-    // const result = favorites.find( favorite => favorite.id === idBook);
     const req = {
         id_user: state.id,
         libro: book
@@ -36,8 +32,6 @@ async function removeAFavorite(state, book) {
 async function getFavorites(idUser) {
     const { data } = await axios.get('https://mi-libro-app.herokuapp.com/api/favoritos', { params: { id_user: idUser } })
     favorites = data
-
-    // return favorites
 }
 
 function getIsFavorite(idBook) {
@@ -45,7 +39,6 @@ function getIsFavorite(idBook) {
 
     if (favorites.length > 0) {
         favorite = favorites.find(book => book.id === idBook)
-
     }
 
     return favorite

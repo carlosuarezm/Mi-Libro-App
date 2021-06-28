@@ -10,6 +10,7 @@ import fetchFont from '../styles/fonts.js'
 import { getFavorites } from "../persistenciaFavs/db.js";
 import { ANDROID_CLIENTE_ID } from "@env";
 import { stylesLogin } from '../styles/LoginStyles.js';
+import BookContext from '../context/Book/BookContext';
 
 
 const Login = (props) => {
@@ -17,6 +18,8 @@ const Login = (props) => {
   const [error, setError] = useState('');
   const { setUserAuthenticated } = useContext(UserContext)
   const [fontLoaded, setFontLoaded] = useState(false)
+  const { setBooksHistory } = useContext(BookContext)
+
 
   const handledGoogleSingIn = async () => {
     const config = {
@@ -28,7 +31,9 @@ const Login = (props) => {
     const { type, accessToken, user } = await Google.logInAsync(config);
 
     if (type === 'success') {
+      setBooksHistory({})
       await AsyncStorage.storeData('@userData', user)
+      await AsyncStorage.removeData('@booksHistory')
       setUserAuthenticated(user)
       await getFavorites(user.id)
       return res
@@ -72,7 +77,7 @@ const Login = (props) => {
               <Image source={iconGoogle} resizeMode='contain' style={stylesLogin.imageGoogle} />
             </View>
 
-            <Text style={stylesLogin.textGoogle}>Sing in with Google</Text>
+            <Text style={stylesLogin.textGoogle}>Inicia sesión con Google</Text>
           </View>
         </TouchableOpacity>
       </View>

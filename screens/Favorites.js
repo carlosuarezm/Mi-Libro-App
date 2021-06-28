@@ -6,8 +6,7 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    Animated,
-    ActivityIndicator
+    Animated
 } from 'react-native'
 
 import AppLoading from 'expo-app-loading'
@@ -48,7 +47,6 @@ const Favorites = ({ navigation }) => {
         return <UserNotLoggedIn />;
     }
 
-    // **** Para las Fuentes **** //
     if (!fontLoaded) {
         return <AppLoading startAsync={fetchFont}
             onError={() => console.log("ERROR en FONT")}
@@ -60,7 +58,7 @@ const Favorites = ({ navigation }) => {
 
     const renderItem = ({ item, index }) => {
         if (!item.bookCover) {
-            return <View style={{ width: SPACER_ITEM_SIZE }} />;
+            return <View style={{ width: SPACER_ITEM_SIZE }}/>;
         }
         const inputRange = [
             (index - 2) * ITEM_SIZE,

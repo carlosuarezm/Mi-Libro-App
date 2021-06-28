@@ -47,9 +47,7 @@ export default function CameraTest({ navigation }) {
                     uri: photo.uri,
                     type: `test/${format}`,
                     name: `test.${format}`
-
                 }
-
                 await handleUpload(newFile)
             }
         }

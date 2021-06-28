@@ -6,10 +6,7 @@ import { Image } from 'react-native'
 import iconHome from '../assets/images/home.png'
 import iconFav from '../assets/images/fav.png'
 
-
 const Tab = createBottomTabNavigator();
-
-// enableScreens(false);
 
 const tabOptions = {
     showLabel: false,
