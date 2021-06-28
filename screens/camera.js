@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ActivityIndicator, Image, StatusBar } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
-import { Feather as Icon } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import { reconocerPorTexto } from "../utils/ApiTextoReqs.js";
 import { buscador } from "../utils/ApiLibro.js";
-import iconUpload from '../assets/upload3.png'
-import iconSwitchCamera from '../assets/switchcamera2.png'
-import iconTakeAPicture from '../assets/takeapicture.png'
-
-import book1 from '../assets/cleancode.jpg'
-
+import iconUpload from '../assets/images/gallery.png'
+import iconSwitchCamera from '../assets/images/switchcamera2.png'
+import iconTakeAPicture from '../assets/images/takeapicture.png'
 import AsyncStorage from "../utils/storage.js";
 import BookContext from '../context/Book/BookContext.js'
+import { stylesCamera } from '../styles/CameraStyles.js';
 
 
 export default function CameraTest({ navigation }) {
@@ -21,7 +18,6 @@ export default function CameraTest({ navigation }) {
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [miCamera, setMiCamera] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
-
     const { booksHistory, setBooksHistory } = useContext(BookContext)
 
     useEffect(() => {
@@ -54,7 +50,6 @@ export default function CameraTest({ navigation }) {
                 }
 
                 await handleUpload(newFile)
-
             }
         }
     }
@@ -63,7 +58,7 @@ export default function CameraTest({ navigation }) {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
         if (permissionResult.granted === false) {
-            alert('Permission to access media library is required ')
+            Alert.alert('¡Lo sentimos!', 'Permission to access media library is required ', [{text: 'ok'}])
             return;
         }
         const pickerResult = await ImagePicker.launchImageLibraryAsync()
@@ -78,7 +73,6 @@ export default function CameraTest({ navigation }) {
             uri: pickerResult.uri,
             type: `test/${format}`,
             name: `test.${format}`
-
         }
 
         await handleUpload(newFile)
@@ -108,7 +102,7 @@ export default function CameraTest({ navigation }) {
                 throw new Error('Libro no encontrado')
             }
         } catch (error) {
-            alert(error.message)
+            Alert.alert('¡Lo sentimos!', error.message, [{text: 'ok'}])
             setIsLoading(false)
             return navigation.navigate('Home')
         }
@@ -126,10 +120,6 @@ export default function CameraTest({ navigation }) {
             navTintColor: '#000'
         }
 
-        //Recordar agregar la lógica que si el libro que se buscó ya está guardado, que no se guarde
-        // fillBooksHistory(book)
-        // await AsyncStorage.storeData('@booksHistory', book)
-
         if (booksHistory) {
             const existeElLibro = booksHistory.id === book.id ? true : false
 
@@ -142,22 +132,18 @@ export default function CameraTest({ navigation }) {
         navigation.replace('BookDetails', { book })
     }
 
-
-
-    //const CameraView = () => ()
-
     return (
         !isLoading ?
-            (<View style={styles.container}>
-                <Camera style={styles.camera} type={type} ratio={'16:9'}
+            (<View style={stylesCamera.containerCamera}>
+                <Camera style={stylesCamera.camera} type={type} ratio={'16:9'}
                     ref={ref => {
                         setMiCamera(ref);
                     }}>
                 </Camera>
-                <View style={{ flex: 0.2, flexDirection: 'row', backgroundColor: "#1E1B26", justifyContent: 'space-between', alignItems: 'center' }}>
+
+                <View style={stylesCamera.containerButtonsCamera}>
                     <TouchableOpacity
-                        // style={{ position: 'absolute', bottom: 20, left: 20 }}
-                        style={{ left: 20, backgroundColor: '#FFFFFF', borderRadius: 25, padding: 1 }}
+                        style={stylesCamera.touchSwitchCamera}
                         onPress={() => {
                             setType(
                                 type === Camera.Constants.Type.back
@@ -165,79 +151,26 @@ export default function CameraTest({ navigation }) {
                                     : Camera.Constants.Type.back
                             );
                         }}>
-                        <Image
-                            source={iconSwitchCamera}
-                            resizeMode='contain'
-                            style={{
-                                width: 48,
-                                height: 48
-                            }}
-                        />
-                        {/* <Icon name="refresh-ccw" size={50} color="white" /> */}
+                        <Image source={iconSwitchCamera} resizeMode='contain' style={stylesCamera.imageSwitchCamera} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        // style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}
                         onPress={takePhoto}>
-                        <Image
-                            source={iconTakeAPicture}
-                            resizeMode='contain'
-                            style={{
-                                width: 60,
-                                height: 60
-                            }}
-                        />
-                        {/* <Icon name="aperture" size={50} color="white" /> */}
+                        <Image source={iconTakeAPicture} resizeMode='contain' style={stylesCamera.imageTakePhoto} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={{ right: 20, backgroundColor: '#FFFFFF', borderRadius: 25 }}
-                        // style={{ position: 'absolute', bottom: 20, right: 20 }}
+                        style={stylesCamera.touchGallery}
                         onPress={openImagePickerAsync}>
-                        <Image
-                            source={iconUpload}
-                            resizeMode='contain'
-                            style={{
-                                width: 50,
-                                height: 50
-                            }}
-                        />
-                        {/* <Icon name="upload" size={50} color="white" /> */}
+                        <Image source={iconUpload} resizeMode='contain' style={stylesCamera.imageGallery}/>
                     </TouchableOpacity>
                 </View>
-
             </View>)
             :
 
-            <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", padding: 10, backgroundColor: '#1E1B26' }}>
+            <View style={stylesCamera.containerLoading}>
                 <ActivityIndicator size="large" color="#FFFFFF" ></ActivityIndicator>
             </View>
     );
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight
-    },
-    camera: {
-        flex: 0.8,
-    },
-    buttonContainer: {
-        flex: 1,
-        backgroundColor: 'transparent',
-        flexDirection: 'row',
-        margin: 20,
-    },
-    button: {
-        flex: 0.1,
-        alignSelf: 'flex-end',
-        alignItems: 'center',
-    },
-    text: {
-        fontSize: 18,
-        color: 'white',
-    },
-});
 

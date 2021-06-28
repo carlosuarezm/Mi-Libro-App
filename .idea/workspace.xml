@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="b07a6f66-4924-4242-a6d0-98206e01bb8c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase/fire.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pruebaFavoritos/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/pruebaFavoritos/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/BookDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/BookDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/CreateUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/CreateUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/Favorites.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Favorites.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/camera.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,11 +43,11 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="244" y="118" width="1200" height="800" key="AVDManager" timestamp="1624775341890">
+    <state x="244" y="118" width="1200" height="800" key="AVDManager" timestamp="1624838055024">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="222" y="105" width="900" height="662" key="AVDManager/0.0.1440.860@0.0.1440.860" timestamp="1623650829357" />
-    <state x="244" y="118" width="1200" height="800" key="AVDManager/0.0.1920.1040@0.0.1920.1040" timestamp="1624775341890" />
+    <state x="244" y="118" width="1200" height="800" key="AVDManager/0.0.1920.1040@0.0.1920.1040" timestamp="1624838055024" />
     <state x="515" y="185" key="FileChooserDialogImpl" timestamp="1623465694210">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

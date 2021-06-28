@@ -1,10 +1,11 @@
 import React, { useEffect, useContext } from 'react';
+import { Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/tab.js'
 import BookDetails from './screens/BookDetails.js';
 import Login from './screens/Login'
-import Camera from "./screens/Camera.js"
+import Camera from './screens/Camera.js'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from "./utils/storage.js";
 import BookState from './context/Book/BookState.js';
@@ -27,7 +28,7 @@ const App = () => {
       try {
         await getFavorites(user.id)
       } catch (error) {
-        alert('Error inesperado, intente de nuevo')
+        Alert.alert('¡Lo sentimos!', 'Error inesperado, intente de nuevo', [{text: 'ok'}])
       }
     }
     return user

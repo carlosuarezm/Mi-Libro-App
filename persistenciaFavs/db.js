@@ -1,4 +1,5 @@
 import axios from "axios"
+import {Alert} from 'react-native'
 
 let favorites = [];
 
@@ -12,7 +13,7 @@ async function addToFavorite(state, book) {
         const { data } = await axios.post('https://mi-libro-app.herokuapp.com/api/favoritos/agregar', req)
         favorites = data
     } catch (error) {
-        alert(error.message)
+        Alert.alert('¡Lo sentimos!', error.message, [{text: 'ok'}])
     }
 
 }
@@ -30,7 +31,8 @@ async function removeAFavorite(state, book) {
     }
     const { data } = await axios.post('https://mi-libro-app.herokuapp.com/api/favoritos/eliminar', req)
     favorites = data
-
+    console.log('Estoy viendo los Favoritos luego de borrar')
+    console.log(favorites)
 }
 
 async function getFavorites(idUser) {

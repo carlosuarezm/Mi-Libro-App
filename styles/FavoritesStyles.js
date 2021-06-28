@@ -63,30 +63,38 @@ const stylesFavorites = StyleSheet.create({
     },
     imageBookCover: {
         width: 180,
-        height: 250,
+        height: 280,
         borderRadius: 20
     },
     bookInfoContainer: {
-        marginTop: 12,
         flexDirection: 'column',
         width: 180,
         height: 100,
-        justifyContent: 'flex-start'
+        justifyContent: 'center',
+        alignItems:'center'
     },
     bookName: {
         fontFamily: 'Roboto-Medium',
-        marginLeft: 5,
         textAlign: 'center',
         width: 180,
         color: '#000000'
     },
     authorName: {
         fontFamily: 'Roboto-Light',
-        marginLeft: 5,
-        marginTop: 10,
         textAlign: 'center',
+        marginTop: 10,
         width: 180,
         color: '#000000'
+    },
+    containerRating: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imageRating: {
+        width:16, 
+        height:16, 
+        marginLeft:2
     }
 });
 

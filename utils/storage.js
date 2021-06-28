@@ -1,4 +1,5 @@
 import Storage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 const AsyncStorage = {};
 
@@ -9,7 +10,7 @@ AsyncStorage.storeData = async (key, value) => {
         }
         await Storage.setItem(key, value)
     } catch (error) {
-        alert('Error inesperado!!')
+        Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
     }
 }
 
@@ -26,7 +27,7 @@ AsyncStorage.clearData = async () => {
     try {
         await Storage.clear()
     } catch (error) {
-        alert('Error inesperado!!!')
+        Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
     }
 }
 
@@ -34,7 +35,7 @@ AsyncStorage.removeData = async (key) => {
     try {
         await Storage.removeItem(key)
     } catch (e) {
-        alert('Error inesperado!!!')
+        Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
     }
 }
 

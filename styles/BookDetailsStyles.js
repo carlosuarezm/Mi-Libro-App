@@ -24,11 +24,14 @@ const stylesBookDetails = StyleSheet.create({
         textAlign: 'justify'
     },
     containerBookInfo: {
+        flex: 0.8,
         flexDirection: 'row',
         paddingVertical: 20,
         margin: 24,
         borderRadius: 12,
-        backgroundColor: 'rgba(0,0,0,0.3)'
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent:'center',
+        alignItems:'center'
     },
     itemsBookInfo: {
         flex: 1,
@@ -47,16 +50,16 @@ const stylesBookDetails = StyleSheet.create({
         color: '#FFFFFF'
     },
     containerBookNameAuthor: {
-        flex: 1.8,
+        flex: 2,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-between'
     },
     bookName: {
         fontFamily: 'Roboto-Bold',
         fontSize: 16,
         lineHeight: 30,
         color: '#000000',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     bookAuthor: {
         fontFamily: 'Roboto-Regular',

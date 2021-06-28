@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react'
-import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView } from 'react-native'
-import iconBack from '../assets/back.png'
-import iconLike from '../assets/like3.png'
+import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import iconBack from '../assets/images/back.png'
+import iconLike from '../assets/images/like3.png'
 import AppLoading from 'expo-app-loading'
-import BookContext from '../context/Book/BookContext.js'
 import UserContext from '../context/User/UserContext.js';
 import { addToFavorite, getIsFavorite, removeAFavorite } from '../persistenciaFavs/db.js'
 import fetchFont from '../styles/fonts.js'
@@ -15,8 +14,6 @@ const BookDetail = ({ route, navigation }) => {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [isFavorite, setIsFavorite] = React.useState(false)
     const [book, setBook] = React.useState(null)
-
-    const { favBooks, fillFavBooks, deleteFavBook } = useContext(BookContext)
     const { state } = useContext(UserContext)
 
     React.useEffect(() => {
@@ -41,7 +38,8 @@ const BookDetail = ({ route, navigation }) => {
                 await addToFavorite(state, book)
                 setIsFavorite(true)
             } catch (error) {
-                alert('Error inesperado')
+                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
+
             }
         }
     }
@@ -52,7 +50,8 @@ const BookDetail = ({ route, navigation }) => {
                 await removeAFavorite(state, book)
                 setIsFavorite(false)
             } catch (error) {
-                alert('Error inesperado')
+                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
+
             }
         }
     }
@@ -92,7 +91,7 @@ const BookDetail = ({ route, navigation }) => {
                             <Image
                                 source={iconLike}
                                 resizeMode='contain'
-                                style={{ width: 25, height: 25, tintColor: isFavorite ? 'red' : 'grey' }}
+                                style={{ width: 25, height: 25, tintColor: isFavorite ? '#F22417' : '#8A8584' }}
                             />
                         </TouchableOpacity>
 

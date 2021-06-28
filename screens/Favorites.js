@@ -1,4 +1,3 @@
-
 import { getFavCache } from '../persistenciaFavs/db.js'
 import React, { useState, useContext, useEffect } from 'react'
 import {
@@ -12,12 +11,13 @@ import {
 } from 'react-native'
 
 import AppLoading from 'expo-app-loading'
-import BookContext from '../context/Book/BookContext'
 import UserContext from '../context/User/UserContext.js';
 import { stylesFavorites } from '../styles/FavoritesStyles.js'
 import fetchFont from '../styles/fonts.js'
 
-const { height, width } = Dimensions.get('window');
+import iconRating from '../assets/images/star.png'
+
+const { width } = Dimensions.get('window');
 const ITEM_SIZE = width * 0.74;
 const SPACING = 10;
 const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2;
@@ -29,16 +29,11 @@ const UserNotLoggedIn = () => (
 );
 
 
-
-
 const Favorites = ({ navigation }) => {
     const [favorites, setFavorites] = useState([]);
     const [fontLoaded, setFontLoaded] = useState(false)
     const scrollX = React.useRef(new Animated.Value(0)).current;
-
-    const { favBooks, fillFavBooks, setFavBooks } = useContext(BookContext)
-    const { state, setUserAuthenticated } = useContext(UserContext)
-
+    const { state } = useContext(UserContext)
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -97,6 +92,16 @@ const Favorites = ({ navigation }) => {
                             <Text style={stylesFavorites.bookName}>{item.bookName}</Text>
                             <Text style={stylesFavorites.authorName}>{item.author}</Text>
                         </View>
+
+                        {item.rating !== 'N/A'
+                        ? 
+                        <View style={stylesFavorites.containerRating}>
+                            <Text>{item.rating}</Text>
+                            <Image resizeMode='cover' source={iconRating} style={stylesFavorites.imageRating} />
+                        </View>
+
+                        : null
+                        }
                     </TouchableOpacity>
                 </Animated.View>
             </View>

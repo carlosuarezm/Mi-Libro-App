@@ -95,12 +95,20 @@ const stylesHome = StyleSheet.create({
     headerText: {
         color: '#FFFFFF',
         fontFamily: 'Roboto-Medium',
-        fontSize: 18,
+        fontSize: 17,
         lineHeight: 30
     },
     headerLoggedIn: {
         flex: 1,
-        marginTop: 50
+        marginTop: 50,
+        alignItems:'flex-start',
+        justifyContent:'center'
+    },
+    headerImageLoggedIn:{
+        flex: 0.3,
+        marginTop:50,
+        alignItems:'flex-start',
+        justifyContent:'center'
     },
     touchButtonHeader: {
         backgroundColor: '#364156',
@@ -108,13 +116,13 @@ const stylesHome = StyleSheet.create({
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 20,
-        marginTop: 50
+        marginTop: 57
     },
     touchImageButtonHeader: {
         flex: 1,
         flexDirection: 'row',
-        width: 32,
-        height: 32,
+        width: 30,
+        height: 30,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 25,

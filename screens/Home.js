@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { View, Text, TouchableOpacity, SafeAreaView, Image } from 'react-native'
-import iconCamera from '../assets/camera.png'
-import iconLogOut from '../assets/logout.png'
-import iconLogIn from '../assets/login2.png'
+import iconCamera from '../assets/images/camera.png'
+import iconLogOut from '../assets/images/logout.png'
+import iconLogIn from '../assets/images/login2.png'
 import AppLoading from 'expo-app-loading'
 import BookContext from '../context/Book/BookContext.js'
 import AsyncStorage from '../utils/storage'
@@ -42,7 +42,10 @@ const Home = ({ navigation }) => {
                 {/* Saludo */}
                 {state
                     ?
-                    <>
+                    <View style={{flexDirection:'row'}}>
+                        <View style={stylesHome.headerImageLoggedIn}>
+                            <Image source={{uri: state.photoUrl}} resizeMode='cover' style={{ width: 60, height: 60, borderRadius:28 }} />
+                        </View>
                         <View style={stylesHome.headerLoggedIn}>
                             <Text style={stylesHome.headerGreeting}>Hola</Text>
                             <Text style={stylesHome.headerText}>{state.name}</Text>
@@ -50,10 +53,10 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={logOut}>
                             <View style={stylesHome.touchImageButtonHeader}>
-                                <Image source={iconLogOut} resizeMode='contain' style={{ width: 20, height: 20 }} />
+                                <Image source={iconLogOut} resizeMode='cover' style={{ width: 20, height: 20 }} />
                             </View>
                         </TouchableOpacity>
-                    </>
+                    </View>
                     :
                     <>
                         <View style={stylesHome.headerLoggedIn}>
@@ -63,7 +66,7 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
                             <View style={stylesHome.touchImageButtonHeader}>
-                                <Image source={iconLogIn} resizeMode='contain' style={{ width: 28, height: 28 }} />
+                                <Image source={iconLogIn} resizeMode='cover' style={{ width: 28, height: 28 }} />
                             </View>
                         </TouchableOpacity>
                     </>

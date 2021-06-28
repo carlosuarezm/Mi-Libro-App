@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home.js'
 import Favorites from '../screens/Favorites.js'
 import { Image } from 'react-native'
-import iconHome from '../assets/home.png'
-import iconFav from '../assets/fav.png'
+import iconHome from '../assets/images/home.png'
+import iconFav from '../assets/images/fav.png'
 
 
 const Tab = createBottomTabNavigator();
