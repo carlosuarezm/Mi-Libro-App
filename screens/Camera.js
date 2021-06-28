@@ -110,7 +110,7 @@ export default function CameraTest({ navigation }) {
             id: libro.id,
             publishedDate: libro.publishedDate ? libro.publishedDate : 'N/A',
             bookName: libro.title ? libro.title : 'N/A',
-            bookCover: libro.imageLinks.thumbnail ? { uri: libro.imageLinks.thumbnail } : imageDefault,
+            bookCover: libro.imageLinks ? { uri: libro.imageLinks.thumbnail } : imageDefault,
             rating: libro.averageRating != null ? libro.averageRating : 'N/A',
             pageNo: libro.pageCount ? libro.pageCount : 'N/A',
             author: libro.authors ? libro.authors[0] : 'N/A',

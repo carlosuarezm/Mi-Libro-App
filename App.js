@@ -12,7 +12,7 @@ import BookState from './context/Book/BookState.js';
 import BookContext from './context/Book/BookContext.js'
 import UserState from './context/User/UserState.js';
 import UserContext from './context/User/UserContext.js';
-import { getFavorites } from "./persistenciaFavs/db.js";
+import { loadFavorites } from "./persistenciaFavs/db.js";
 
 
 const Stack = createStackNavigator()
@@ -26,7 +26,7 @@ const App = () => {
     if (user) {
       setUserAuthenticated(user)
       try {
-        await getFavorites(user.id)
+        await loadFavorites(user.id)
       } catch (error) {
         Alert.alert('¡Lo sentimos!', 'Error inesperado, intente de nuevo', [{text: 'ok'}])
       }
@@ -51,7 +51,7 @@ const App = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         {!state ?
           <>
-            <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name='Login' component={Login}/>
           </>
           :
           null
@@ -60,7 +60,6 @@ const App = () => {
         <Stack.Screen name='Home' component={Tabs} />
         <Stack.Screen name='Camera' component={Camera} />
         <Stack.Screen name='BookDetails' component={BookDetails} />
-
       </Stack.Navigator>
 
       <StatusBar style='light' backgroundColor='#1E1B26' />
