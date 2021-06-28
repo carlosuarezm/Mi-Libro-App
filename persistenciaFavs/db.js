@@ -29,7 +29,7 @@ async function removeAFavorite(state, book) {
     favorites = data
 }
 
-async function getFavorites(idUser) {
+async function loadFavorites(idUser) {
     const { data } = await axios.get('https://mi-libro-app.herokuapp.com/api/favoritos', { params: { id_user: idUser } })
     favorites = data
 }
@@ -48,4 +48,4 @@ function logOutFavorites() {
     favorites = []
 }
 
-export { addToFavorite, getFavCache, getFavorites, getIsFavorite, removeAFavorite, logOutFavorites }
+export { addToFavorite, getFavCache, loadFavorites, getIsFavorite, removeAFavorite, logOutFavorites }

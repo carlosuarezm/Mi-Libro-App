@@ -25,15 +25,14 @@ function armarRequest(ruta) {
   }
 }
 
-
 const reconocerPorTexto = async rutaImagen => {
-
   const res = await axios.post(urlAPI, armarRequest(rutaImagen))
-  if (res.data.responses[0].textAnnotations[0].description == undefined) {
-    throw new Error('Ocirrió un error inesperado intente nuevamente')
+  try {
+    const text = res.data.responses[0].textAnnotations[0].description.replace(/\n/g, ' ')
+    return text
+  } catch (error) {
+    throw new Error('Ocurrió un error inesperado intente nuevamente')
   }
-  const text = res.data.responses[0].textAnnotations[0].description.replace(/\n/g, ' ')
-  return text
 }
 
 

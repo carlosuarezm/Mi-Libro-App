@@ -7,15 +7,13 @@ import UserContext from '../context/User/UserContext.js';
 import AsyncStorage from '../utils/storage.js';
 import AppLoading from 'expo-app-loading'
 import fetchFont from '../styles/fonts.js'
-import { getFavorites } from "../persistenciaFavs/db.js";
+import { loadFavorites } from "../persistenciaFavs/db.js";
 import { ANDROID_CLIENTE_ID } from "@env";
 import { stylesLogin } from '../styles/LoginStyles.js';
 import BookContext from '../context/Book/BookContext';
 
 
 const Login = (props) => {
-
-  const [error, setError] = useState('');
   const { setUserAuthenticated } = useContext(UserContext)
   const [fontLoaded, setFontLoaded] = useState(false)
   const { setBooksHistory } = useContext(BookContext)
@@ -26,16 +24,16 @@ const Login = (props) => {
       androidClientId: ANDROID_CLIENTE_ID,
       scopes: ['profile', 'email']
     }
-    const res = { accessToken, user }
-
+    
     const { type, accessToken, user } = await Google.logInAsync(config);
-
+    const res = { accessToken, user }
+    
     if (type === 'success') {
       setBooksHistory({})
       await AsyncStorage.storeData('@userData', user)
       await AsyncStorage.removeData('@booksHistory')
       setUserAuthenticated(user)
-      await getFavorites(user.id)
+      await loadFavorites(user.id)
       return res
     }
   }
@@ -87,10 +85,6 @@ const Login = (props) => {
           <Text style={stylesLogin.skipText}>Continuar sin loguearse</Text>
         </TouchableOpacity>
       </View>
-
-      {
-        error ? <Text style={{ color: 'red' }}>{error}</Text> : null
-      }
     </View>
   )
 }

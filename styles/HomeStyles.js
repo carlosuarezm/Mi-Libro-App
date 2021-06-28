@@ -68,6 +68,7 @@ const stylesHome = StyleSheet.create({
         justifyContent: 'center'
     },
     imageBook: {
+        flex: 1,
         width: 180,
         height: 275,
         borderRadius: 15
