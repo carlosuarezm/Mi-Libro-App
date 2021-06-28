@@ -1,154 +1,159 @@
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Image } from 'react-native'
-import book1 from '../assets/cleancode.jpg'
-import book2 from '../assets/harry.jpg'
-import book3 from '../assets/gameofthrones.png'
+import React, { useState, useContext } from 'react'
+import { View, Text, TouchableOpacity, SafeAreaView, Image } from 'react-native'
+import iconCamera from '../assets/images/camera.png'
+import iconLogOut from '../assets/images/logout.png'
+import iconLogIn from '../assets/images/login2.png'
+import AppLoading from 'expo-app-loading'
+import BookContext from '../context/Book/BookContext.js'
+import AsyncStorage from '../utils/storage'
+import UserContext from '../context/User/UserContext.js';
+import fetchFont from '../styles/fonts.js'
+import { stylesHome } from '../styles/HomeStyles.js'
+import { logOutFavorites } from "../persistenciaFavs/db.js";
 
 
 const Home = ({ navigation }) => {
+    const { booksHistory, setBooksHistory } = useContext(BookContext)
+    const { state, setUserAuthenticated } = useContext(UserContext)
 
-    const profileData = {
-        name: 'Lee Wei Chun' 
+    async function logOut() {
+        await AsyncStorage.clearData();
+        setBooksHistory({})
+        setUserAuthenticated(null)
+        logOutFavorites()
+        navigation.navigate('Login')
     }
 
-    const [profile, setProfile] = React.useState(profileData)
+    const [fontLoaded, setFontLoaded] = useState(false)
 
-    function renderHeader(profile){
+    if (!fontLoaded) {
+        return <AppLoading startAsync={fetchFont}
+            onError={() => console.log("ERROR en FONT")}
+            onFinish={() => {
+                setFontLoaded(true)
+            }}
+        />
+    }
+
+    function renderHeader() {
 
         return (
-            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 24, alignItems: 'center'}}>
+            <>
                 {/* Saludo */}
-                <View style={{ flex: 1 }}>
-                    <View style={{ marginRight: 24 }}>
-                        <Text style={{ color: '#FFFFFF', fontSize: 16, lineHeight: 22}}>Hola</Text>
-                        <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 30}}>{profile.name}</Text>
+                {state
+                    ?
+                    <View style={{flexDirection:'row'}}>
+                        <View style={stylesHome.headerImageLoggedIn}>
+                            <Image source={{uri: state.photoUrl}} resizeMode='cover' style={stylesHome.imagePhotoUrl} />
+                        </View>
+                        <View style={stylesHome.headerLoggedIn}>
+                            <Text style={stylesHome.headerGreeting}>Hola</Text>
+                            <Text style={stylesHome.headerText}>{state.name}</Text>
+                        </View>
+
+                        <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={logOut}>
+                            <View style={stylesHome.touchImageButtonHeader}>
+                                <Image source={iconLogOut} resizeMode='cover' style={stylesHome.imageIconLogOut} />
+                            </View>
+                        </TouchableOpacity>
                     </View>
+                    :
+                    <>
+                        <View style={stylesHome.headerLoggedIn}>
+                            <Text style={stylesHome.headerGreeting}>Hola</Text>
+                            <Text style={stylesHome.headerText}>¡Que tengas un buen día!</Text>
+                        </View>
 
-                </View>
-
-            </View>
+                        <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
+                            <View style={stylesHome.touchImageButtonHeader}>
+                                <Image source={iconLogIn} resizeMode='cover' style={stylesHome.imageIconLogIn} />
+                            </View>
+                        </TouchableOpacity>
+                    </>
+                }
+            </>
         )
     }
 
-    const bookCleanCode = {
-        id:1,
-        bookName: 'Clean Code',
-        bookCover: book1,
-        rating: 4.5,
-        pageNo: 341,
-        author: 'Robert C.Martin',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(240, 240, 232, 0.9)',
-        navTintColor: '#000'
-    }
+    function renderMyBookSection() {
 
-    const bookHarry = {
-        id:2,
-        bookName: 'Harry Potter',
-        bookCover: book2,
-        rating: 4.7,
-        pageNo: 200,
-        author: 'J.K. Rowling',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(247, 239, 219, 0.9)',
-        navTintColor: '#000'
-    }
-    
-    const bookGameOfThrones = {
-        id:3,
-        bookName: 'Game of Thrones',
-        bookCover: book3,
-        rating: 4.9,
-        pageNo: 412,
-        author: 'George R.R. Martin',
-        description: 'asdsaddsad asdas d assadas dsa dasd asdd asdasd sa',
-        backgroundColor: 'rgba(247, 239, 219, 0.9)',
-        navTintColor: '#000'
-    }
-
-    const myBooksData = [bookCleanCode, bookHarry, bookGameOfThrones]
-
-    const [myBooks, setMyBooks] = React.useState(myBooksData)
-
-
-    function renderMyBookSection(myBooks){
-
-        const renderItem = ({item, index}) => {
-
-            return (
-                <TouchableOpacity
-                style={{
-                    flex:1,
-                    marginLeft: index == 0 ? 24 : 0,
-                    marginRight: 12,
-                }}
-                onPress={() => navigation.navigate("BookDetails", {
-                    book: item
-                })}
-                > 
-
-                {/* Book Cover */}
-                <Image
-                    source={item.bookCover}
-                    resizeMode='cover'
-                    style={{
-                        width: 180,
-                        height:250,
-                        borderRadius: 20
-                    }}
-                />
-
-                {/* Book Info */}
-                <View style={{ marginTop: 12, flexDirection: 'row', width: 180, height: 200, justifyContent: 'center'}}>
-                    <Text style={{marginLeft: 5, textAlign: 'left', width: 180, height: 200, color: '#FFFFFF'}}>{item.author}</Text>
-                </View>
-            </TouchableOpacity>
-            )
-        } 
-
-        return(
-            <View style={{ flex: 1 }}>
+        return (
+            <>
                 {/* Header */}
-                <View style={{ paddingHorizontal: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 16, lineHeight: 22, color: '#FFFFFF' }}>Mis Busquedas Recientes</Text>
+                <View style={stylesHome.headerBookSection}>
+                    <Text style={stylesHome.textHeaderBookSection}>Mi última busqueda</Text>
                 </View>
 
                 {/* Books */}
-                <View style={{ flex:1, marginTop: 24 }}>
-                    <FlatList
-                        data={myBooks}
-                        renderItem={renderItem}
-                        keyExtractor={item => `${item.id}`}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-            </View>
+                {booksHistory === null || booksHistory.id === undefined
+
+                    ?
+                    <View style={stylesHome.booksContainer}>
+                        <Text style={stylesHome.textBooks}>
+                            No tiene búsquedas recientes.
+                        </Text>
+                        <Text style={stylesHome.textBooks}>
+                            ¡Realice una búsqueda!
+                        </Text>
+                    </View>
+
+                    :
+                    <View style={stylesHome.bookContainer}>
+                        <TouchableOpacity
+                            style={stylesHome.touchBook}
+                            onPress={() => navigation.navigate("BookDetails", {
+                                book: booksHistory
+                            })}
+                        >
+                            {/* Book Cover */}
+                            <Image source={booksHistory.bookCover} resizeMode='cover' style={stylesHome.imageBook} />
+
+                            {/* Book Info */}
+                            <View style={stylesHome.bookInfoContainer}>
+                                <Text style={stylesHome.textBookInfo}>{booksHistory.author}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                }
+            </>
+        )
+    }
+
+    function renderCameraSection() {
+
+        return (
+            <>
+                {/* Camera */}
+                <TouchableOpacity style={stylesHome.touchCamera} onPress={() => navigation.navigate("Camera")}>
+                    <View style={stylesHome.cameraContainer}>
+                        <View style={stylesHome.imageCameraContainer}>
+                            <Image source={iconCamera} resizeMode='contain' style={stylesHome.imageCamera} />
+                        </View>
+
+                        <Text style={stylesHome.textCamera}>Buscar</Text>
+                    </View>
+                </TouchableOpacity>
+            </>
         )
     }
 
 
     return (
-       <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1B26'}}>
+        <SafeAreaView style={stylesHome.containerHome}>
             {/* Header Section */}
-            <View style={{ height: 200 }}>
-                {renderHeader(profile)}
+            <View style={stylesHome.containerHeaderSection}>
+                {renderHeader()}
             </View>
-
-            {/* Body Section */}
-            <ScrollView style={{ marginTop: 12 }}>
-                {/* Books Section */}
-                <View>
-                    {renderMyBookSection(myBooks)}
-                </View>
-
-                {/* Categories Section */}
-
-            </ScrollView>
-       </SafeAreaView>
-
+            {/* Books Section */}
+            <View style={stylesHome.containerBooksSection}>
+                {renderMyBookSection()}
+            </View>
+            {/* Camera Section */}
+            <View style={stylesHome.containerCameraSection}>
+                {renderCameraSection()}
+            </View>
+        </SafeAreaView>
     )
 }
-
 
 export default Home

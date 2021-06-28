@@ -1,162 +1,92 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import firebase from '../firebase/fire.js'
-import "firebase/auth";
-import { SocialIcon } from 'react-native-elements'
+import React, { useState, useContext } from 'react'
+import { Text, View, TouchableOpacity, Image, Alert } from 'react-native';
 import * as Google from 'expo-google-app-auth'
-
-const handledGoogleSingIn = async () => {
-  const config = {
-    androidClientId: "628836821863-5jhatmlvu7hm5s6073dd9pl2vtpvciv5.apps.googleusercontent.com",
-    scopes: ['profile', 'email']
-  }
-
-  const { type, accessToken, user } = await Google.logInAsync(config);
-  const res = { accessToken, user }
-  if (type === 'success') {
-    // console.log(user)
-    // console.log('token', accessToken)
-    return res
-  }
-}
+import logoApp from '../assets/images/logo.png'
+import iconGoogle from '../assets/images/logogoogle.png'
+import UserContext from '../context/User/UserContext.js';
+import AsyncStorage from '../utils/storage.js';
+import AppLoading from 'expo-app-loading'
+import fetchFont from '../styles/fonts.js'
+import { loadFavorites } from "../persistenciaFavs/db.js";
+import { ANDROID_CLIENTE_ID } from "@env";
+import { stylesLogin } from '../styles/LoginStyles.js';
+import BookContext from '../context/Book/BookContext';
 
 
 const Login = (props) => {
+  const { setUserAuthenticated } = useContext(UserContext)
+  const [fontLoaded, setFontLoaded] = useState(false)
+  const { setBooksHistory } = useContext(BookContext)
 
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [error, setError] = useState('');
+
+  const handledGoogleSingIn = async () => {
+    const config = {
+      androidClientId: ANDROID_CLIENTE_ID,
+      scopes: ['profile', 'email']
+    }
+    
+    const { type, accessToken, user } = await Google.logInAsync(config);
+    const res = { accessToken, user }
+    
+    if (type === 'success') {
+      setBooksHistory({})
+      await AsyncStorage.storeData('@userData', user)
+      await AsyncStorage.removeData('@booksHistory')
+      setUserAuthenticated(user)
+      await loadFavorites(user.id)
+      return res
+    }
+  }
 
   const loginGoogle = async () => {
-    const res = await handledGoogleSingIn()
-    
-    if(res){
-      setTimeout(() => {
-        console.log(res.user)
-        home()
-      }, 300);
-    }
-    
-    
-  }
-
-  const loginUser = async () => {
     try {
+      const res = await handledGoogleSingIn()
 
-      let aut = await firebase.auth().signInWithEmailAndPassword(email, password);
-      home()
-
-    } catch (err) {
-      console.log(err)
-      if (!email || err.code == "auth/argument-error") {
-        err.message = "Ingrese datos"
-      } else if (err.code == "auth/invalid-email") {
-        err.message = "La dirección de mail es inválida"
-      } else if (err.code == "auth/user-not-found" || "auth/wrong-password") {
-        err.message = "Usuario o contraseña inválida"
+      if (res) {
+        home()
       }
-      setError(err.message);
+
+    } catch (error) {
+      Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
     }
   }
-  const home = () =>{
+
+  const home = async () => {
     props.navigation.navigate('Home')
   }
 
-  const register = () => {
-    props.navigation.navigate('CreateUser')
-
+  if (!fontLoaded) {
+    return <AppLoading startAsync={fetchFont}
+      onError={() => console.log("ERROR en FONT")}
+      onFinish={() => {
+        setFontLoaded(true)
+      }}
+    />
   }
-
-
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bienvenid@s a MiLibro!</Text>
+    <View style={stylesLogin.containerLogin}>
+      <Image source={logoApp} resizeMode='cover' style={stylesLogin.imageLogo} />
 
-      <Text style={styles.text}>
-        Email
-      </Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={setEmail}
-        value={email}
-        placeholder="Ingrese su email"
-      />
+      <View style={{ paddingTop: 50 }}>
+        <TouchableOpacity style={stylesLogin.touchGoogle} onPress={loginGoogle}>
+          <View style={stylesLogin.containerGoogle}>
+            <View style={stylesLogin.containerImageGoogle}>
+              <Image source={iconGoogle} resizeMode='contain' style={stylesLogin.imageGoogle} />
+            </View>
 
-      <Text style={styles.text}>
-        Contraseña
-      </Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Ingrese su contraseña"
-        keyboardType="default"
-        secureTextEntry={true}
-      />
-
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={loginUser} style={styles.button}>
-          <Text style={styles.buttonText}>Ingresar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={register} style={styles.button}>
-          <Text style={styles.buttonText}>Registrarse</Text>
+            <Text style={stylesLogin.textGoogle}>Inicia sesión con Google</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.googleContainer}>
-
-        
-        
-          <SocialIcon type="google" style={styles.googlelButton} onPress={loginGoogle}/>
-        
-        
-      </View>
-
-      <View style={styles.skipContainer}>
-        <TouchableOpacity onPress={home} style={styles.buttonSkip}>
-          <Text style={styles.buttonText}>Continuar sin loguearse</Text>
+      <View style={stylesLogin.skipContainer}>
+        <TouchableOpacity onPress={home}>
+          <Text style={stylesLogin.skipText}>Continuar sin loguearse</Text>
         </TouchableOpacity>
       </View>
-
-      {
-        error ? <Text style={{ color: 'red' }}>{error}</Text> : null
-      }
     </View>
-
   )
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1E1B26', alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 30, fontWeight: 'bold', color: 'white' },
-  text: { fontSize: 12, marginTop: 18, fontWeight: 'bold', color: 'white', textAlign: 'left' },
-  textInput: { width: '90%', marginBottom: 10, padding: 10, borderWidth: 0, backgroundColor: 'white', borderRadius: 100, },
-
-  button: { backgroundColor: '#6169E7', padding: 15, width: "48%", borderRadius: 100 },
-  buttonText: { fontSize: 16, color: 'white', alignSelf: 'center', fontWeight: 'bold' },
-
-  btnContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%"
-
-  },
-
-  googlelButton: {
-    backgroundColor: "#6169E7",
-  },
-
-  googleContainer: {
-    marginTop: 5
-  },
-  skipContainer: {
-    marginTop: 20
-  },
-  buttonSkip:{
-    backgroundColor: '#6169E7', padding: 15, width: "75%", borderRadius: 100
-  }
-});
 
 export default Login
