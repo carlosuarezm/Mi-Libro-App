@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { API_VISION_KEY } from "@env";
-//const API_VISION_KEY ='AIzaSyDJa3VCojDukuMXi86rKk4RhoOv4wDoc8Q'
 const urlAPI = `https://vision.googleapis.com/v1/images:annotate?key=${API_VISION_KEY}`
 
 
