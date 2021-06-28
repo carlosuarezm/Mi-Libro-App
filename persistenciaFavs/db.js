@@ -31,8 +31,6 @@ async function removeAFavorite(state, book) {
     }
     const { data } = await axios.post('https://mi-libro-app.herokuapp.com/api/favoritos/eliminar', req)
     favorites = data
-    console.log('Estoy viendo los Favoritos luego de borrar')
-    console.log(favorites)
 }
 
 async function getFavorites(idUser) {
