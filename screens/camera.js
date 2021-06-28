@@ -11,6 +11,7 @@ import iconTakeAPicture from '../assets/images/takeapicture.png'
 import AsyncStorage from "../utils/storage.js";
 import BookContext from '../context/Book/BookContext.js'
 import { stylesCamera } from '../styles/CameraStyles.js';
+import imageDefault from '../assets/images/bookcoverdefault.jpeg'
 
 
 export default function CameraTest({ navigation }) {
@@ -110,11 +111,11 @@ export default function CameraTest({ navigation }) {
         const book = {
             id: libro.id,
             publishedDate: libro.publishedDate ? libro.publishedDate : 'N/A',
-            bookName: libro.title,
-            bookCover: { uri: libro.imageLinks.thumbnail },
+            bookName: libro.title ? libro.title : 'N/A',
+            bookCover: libro.imageLinks.thumbnail ? { uri: libro.imageLinks.thumbnail } : imageDefault,
             rating: libro.averageRating != null ? libro.averageRating : 'N/A',
             pageNo: libro.pageCount ? libro.pageCount : 'N/A',
-            author: libro.authors[0],
+            author: libro.authors ? libro.authors[0] : 'N/A',
             description: libro.description ? libro.description : 'No se ha encontrado descripción del libro solicitado.',
             backgroundColor: 'rgba(240, 240, 232, 0.9)',
             navTintColor: '#000'

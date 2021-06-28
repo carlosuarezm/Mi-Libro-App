@@ -44,7 +44,7 @@ const Home = ({ navigation }) => {
                     ?
                     <View style={{flexDirection:'row'}}>
                         <View style={stylesHome.headerImageLoggedIn}>
-                            <Image source={{uri: state.photoUrl}} resizeMode='cover' style={{ width: 60, height: 60, borderRadius:28 }} />
+                            <Image source={{uri: state.photoUrl}} resizeMode='cover' style={stylesHome.imagePhotoUrl} />
                         </View>
                         <View style={stylesHome.headerLoggedIn}>
                             <Text style={stylesHome.headerGreeting}>Hola</Text>
@@ -53,7 +53,7 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={logOut}>
                             <View style={stylesHome.touchImageButtonHeader}>
-                                <Image source={iconLogOut} resizeMode='cover' style={{ width: 20, height: 20 }} />
+                                <Image source={iconLogOut} resizeMode='cover' style={stylesHome.imageIconLogOut} />
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -66,7 +66,7 @@ const Home = ({ navigation }) => {
 
                         <TouchableOpacity style={stylesHome.touchButtonHeader} onPress={() => navigation.navigate('Login')}>
                             <View style={stylesHome.touchImageButtonHeader}>
-                                <Image source={iconLogIn} resizeMode='cover' style={{ width: 28, height: 28 }} />
+                                <Image source={iconLogIn} resizeMode='cover' style={stylesHome.imageIconLogIn} />
                             </View>
                         </TouchableOpacity>
                     </>
@@ -106,7 +106,7 @@ const Home = ({ navigation }) => {
                             })}
                         >
                             {/* Book Cover */}
-                            <Image source={booksHistory.bookCover} resizeMode='contain' style={stylesHome.imageBook} />
+                            <Image source={booksHistory.bookCover} resizeMode='cover' style={stylesHome.imageBook} />
 
                             {/* Book Info */}
                             <View style={stylesHome.bookInfoContainer}>

@@ -69,8 +69,8 @@ const stylesHome = StyleSheet.create({
     },
     imageBook: {
         width: 180,
-        height: 230,
-        borderRadius: 3
+        height: 275,
+        borderRadius: 15
     },
     bookInfoContainer: {
         marginTop: 12,
@@ -102,19 +102,20 @@ const stylesHome = StyleSheet.create({
         flex: 1,
         marginTop: 50,
         alignItems:'flex-start',
-        justifyContent:'center'
+        justifyContent:'center',
+        paddingLeft:10
     },
     headerImageLoggedIn:{
         flex: 0.3,
         marginTop:50,
-        alignItems:'flex-start',
+        alignItems:'center',
         justifyContent:'center'
     },
     touchButtonHeader: {
         backgroundColor: '#364156',
         height: 40,
-        paddingLeft: 12,
-        paddingRight: 12,
+        paddingLeft: 10,
+        paddingRight: 10,
         borderRadius: 20,
         marginTop: 57
     },
@@ -127,6 +128,19 @@ const stylesHome = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 25,
         backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    imagePhotoUrl:{
+        width: 60, 
+        height: 60, 
+        borderRadius:28
+    },
+    imageIconLogIn:{
+        width: 28, 
+        height: 28
+    },
+    imageIconLogOut:{
+        width: 20, 
+        height: 20
     },
     imageCamera: {
         width: 20,

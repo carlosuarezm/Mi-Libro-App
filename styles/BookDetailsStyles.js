@@ -4,10 +4,7 @@ const stylesBookDetails = StyleSheet.create({
     containerDescription: {
         flex: 1,
         flexDirection: 'column',
-        paddingTop: 30,
-        paddingRight: 24,
-        paddingLeft: 24,
-        paddingBottom: 0
+        padding:24
     },
     textTitleDescription: {
         fontFamily: 'Roboto-Bold',

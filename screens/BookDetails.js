@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import iconBack from '../assets/images/back.png'
 import iconLike from '../assets/images/like3.png'
 import AppLoading from 'expo-app-loading'
@@ -15,6 +15,7 @@ const BookDetail = ({ route, navigation }) => {
     const [isFavorite, setIsFavorite] = React.useState(false)
     const [book, setBook] = React.useState(null)
     const { state } = useContext(UserContext)
+    const [isLoading, setIsLoading] = useState(false);
 
     React.useEffect(() => {
         let { book } = route.params
@@ -35,10 +36,12 @@ const BookDetail = ({ route, navigation }) => {
 
         if (state) {
             try {
+                setIsLoading(true)
                 await addToFavorite(state, book)
+                setIsLoading(false)
                 setIsFavorite(true)
             } catch (error) {
-                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
+                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{ text: 'ok' }])
 
             }
         }
@@ -47,10 +50,12 @@ const BookDetail = ({ route, navigation }) => {
     async function removeFavorite() {
         if (state) {
             try {
+                setIsLoading(true)
                 await removeAFavorite(state, book)
+                setIsLoading(false)
                 setIsFavorite(false)
             } catch (error) {
-                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{text: 'ok'}])
+                Alert.alert('¡Lo sentimos!', 'Error inesperado', [{ text: 'ok' }])
 
             }
         }
@@ -63,6 +68,20 @@ const BookDetail = ({ route, navigation }) => {
                 setFontLoaded(true)
             }}
         />
+    }
+
+    if (isLoading) {
+        return (
+        <View style={{
+            flex: 1,
+            justifyContent: "center",
+            flexDirection: "row",
+            padding: 10,
+            backgroundColor: '#1E1B26'
+        }}>
+            <ActivityIndicator size="large" color="#FFFFFF" ></ActivityIndicator>
+        </View>
+        )
     }
 
 
@@ -145,7 +164,6 @@ const BookDetail = ({ route, navigation }) => {
                 <Text style={stylesBookDetails.textTitleDescription}>Descripcion</Text>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ paddingBottom: 180, marginBottom:10 }}
                 >
                     <Text style={stylesBookDetails.textBookDescription} >{book.description}</Text>
                 </ScrollView>
