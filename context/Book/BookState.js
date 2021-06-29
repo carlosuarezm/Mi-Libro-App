@@ -45,18 +45,3 @@ const BookState = (props) => {
 }
 
 export default BookState;
-
-
-
-
-
-
-
-
-
-    // const getBooksHistory = () => {
-    //     dispatch({
-    //         type: 'GET_BOOKS_HISTORY',
-    //         payload: state.booksHistory
-    //     })
-    // }
