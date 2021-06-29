@@ -6,7 +6,7 @@ const stylesCamera = StyleSheet.create({
         marginTop: StatusBar.currentHeight
     },
     camera: {
-        flex: 0.8,
+        flex: 1,
     },
     containerButtonsCamera: {
         flex: 0.2,
