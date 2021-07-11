@@ -1,5 +1,7 @@
 # Mi-Libro-App
 
+Proyecto final para la materia Nuevas Tecnologías 2 de la Tecnicatura Analista de Sistemas en la ORT.
+
 La app miLibro devuelve información de un libro a partir de una portada escaneada o cargada desde Galería. Está dirigida a todos quienes tengan interés por la lectura.
 
 La aplicación va a tener un alcance de libros que existan en la base de datos de la API de Google Books. Se va a obtener la información (argumento, autor, puntuación) a partir del reconocimiento del texto en la portada de un libro, que podrá escanearse con la cámara del propio celular o bien desde la galería de fotos. El usuario podrá loguearse a través de Google, o bien, acceder sin login. Una vez logueado, va a poder guardar libros en una lista de favoritos.
